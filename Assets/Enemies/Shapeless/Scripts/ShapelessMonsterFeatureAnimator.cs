@@ -51,14 +51,14 @@ namespace Enemies.Shapeless
             featureAnimDatas = new FeatureAnimData[featureAnimators.Length];
             for (int i = 0; i < featureAnimators.Length; i++)
             {
-                featureAnimDatas[i] = new FeatureAnimData(Time.time + Random.Range(0, featureFreqPeriod),
-                    Random.Range(featureFreqMultiplier.x, featureFreqMultiplier.y));
+                featureAnimDatas[i] = new FeatureAnimData(0, 1);//+ Random.Range(0, featureFreqPeriod),
+                    //Random.Range(featureFreqMultiplier.x, featureFreqMultiplier.y));
             }
         }
         
         private void UpdateFrequencyFor(int index)
         {
-            featureAnimators[index].SetFloat(HKEY_FEATURE_FREQUENCY, featureFreq.Evaluate(featureAnimDatas[index].GetTime()));
+            featureAnimators[index].SetFloat(HKEY_FEATURE_FREQUENCY, featureFreq.Evaluate(featureAnimDatas[index].GetTime() / featureFreqPeriod));
         }
 
 
