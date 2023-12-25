@@ -22,9 +22,9 @@ namespace Enemies.Shapeless
         }
 
         const string HKEY_FEATURE_FREQUENCY = "feature_frequency";
+        const string HKEY_FEATURE_MAIN = "feature_main";
         [Header("–аспределени€ частоты фичей по времени (от 0 до 1)")]
-        [SerializeField] private AnimationCurve featureFreq;
-        [SerializeField, Min(1)] private float featureFreqPeriod;
+        [SerializeField] private float featureFreq;
         [Header("—лучайное распределение множител€ частоты (min, max)")]
         // TODO: рандомные числа нужно как то по другому получать
         [SerializeField] private Vector2 featureFreqMultiplier;
@@ -42,7 +42,6 @@ namespace Enemies.Shapeless
         }
         private void Awake()
         {
-            if (featureFreq.postWrapMode != WrapMode.Loop) Debug.LogWarning("¬ыставьте чтобы был Loop у featureFreq");
             InitializeFeaturePeriodDeltas();
         }
 
@@ -52,13 +51,15 @@ namespace Enemies.Shapeless
             for (int i = 0; i < featureAnimators.Length; i++)
             {
                 featureAnimDatas[i] = new FeatureAnimData(0, 1);//+ Random.Range(0, featureFreqPeriod),
-                    //Random.Range(featureFreqMultiplier.x, featureFreqMultiplier.y));
+                                                                //Random.Range(featureFreqMultiplier.x, featureFreqMultiplier.y));
+                // Random offset.
+                featureAnimators[i].Play(HKEY_FEATURE_MAIN, 0, Random.Range(0.0f, 1.0f));
             }
         }
         
         private void UpdateFrequencyFor(int index)
         {
-            featureAnimators[index].SetFloat(HKEY_FEATURE_FREQUENCY, featureFreq.Evaluate(featureAnimDatas[index].GetTime() / featureFreqPeriod));
+            featureAnimators[index].SetFloat(HKEY_FEATURE_FREQUENCY, featureFreq);
         }
 
 
