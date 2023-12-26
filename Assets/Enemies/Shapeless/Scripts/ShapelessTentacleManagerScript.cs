@@ -5,7 +5,7 @@ namespace Enemies.Shapeless
 {
     public class ShapelessTentacleManagerScript : MonoBehaviour
     {
-        public ShapelessTentacleScript[] allTentacles;
+        [SerializeField] private ShapelessTentacleScript[] allTentacles;
         public void ShowUpTentacles()
         {
             foreach(ShapelessTentacleScript tentacle in allTentacles)

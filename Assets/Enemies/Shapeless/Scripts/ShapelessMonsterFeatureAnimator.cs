@@ -23,8 +23,10 @@ namespace Enemies.Shapeless
 
         const string HKEY_FEATURE_FREQUENCY = "feature_frequency";
         const string HKEY_FEATURE_MAIN = "feature_main";
-        [Header("Распределения частоты фичей по времени (от 0 до 1)")]
+        [Header("Поля, изменяемые аниматором.")]
         [SerializeField] private float featureFreq;
+        [SerializeField] private float movingSpeedMultiplier;
+        public float speedMultiplier { get { return movingSpeedMultiplier; } }
         [Header("Случайное распределение множителя частоты (min, max)")]
         // TODO: рандомные числа нужно как то по другому получать
         [SerializeField] private Vector2 featureFreqMultiplier;
