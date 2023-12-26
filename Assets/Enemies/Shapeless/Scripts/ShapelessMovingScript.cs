@@ -15,7 +15,6 @@ namespace Enemies.Shapeless
         [SerializeField] private float degreeRotateLimit;
         [SerializeField] private float rotationSpeed;
         [SerializeField] private ShapelessMonsterFeatureAnimator animator;
-        [SerializeField] private NavMeshQueryFilter queryFilter;
         [SerializeField] private Transform targetTransformToLurk;
         private float correctionAngle = 0;
         private Vector3 targetPosition;
@@ -33,7 +32,6 @@ namespace Enemies.Shapeless
         {
             correctionAngle = 0;
             InvokeRepeating(nameof(PathUpdate), 1, 1);
-            queryFilter = new NavMeshQueryFilter();
         }
 
         private void Update()
