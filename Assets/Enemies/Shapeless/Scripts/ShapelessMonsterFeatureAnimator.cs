@@ -27,6 +27,7 @@ namespace Enemies.Shapeless
         [SerializeField] private float featureFreq;
         [SerializeField] private float movingSpeedMultiplier;
         public float speedMultiplier { get { return movingSpeedMultiplier; } }
+        public float featureFrequency { get { return featureFreq; } }
         [Header("Случайное распределение множителя частоты (min, max)")]
         // TODO: рандомные числа нужно как то по другому получать
         [SerializeField] private Vector2 featureFreqMultiplier;

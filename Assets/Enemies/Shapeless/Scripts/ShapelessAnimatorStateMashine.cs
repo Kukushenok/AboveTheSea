@@ -7,9 +7,10 @@ namespace Enemies.Shapeless
     public class ShapelessAnimatorStateMashine : StateMachineBehaviour
     {
         
-        public delegate void CallbackOnEnter(Animator anim, ShapelessState state);
+        public delegate void CallbackOnEnter(Animator anim, ShapelessState state, int repeatTimes);
         private CallbackOnEnter currentCallback = null;
         public ShapelessState correspondingStateToMe;
+        private int repeatTimes = 0;
         public static void SetupCallingFor(Animator anim, CallbackOnEnter callbackOnEnter)
         {
             foreach (ShapelessAnimatorStateMashine statem in anim.GetBehaviours<ShapelessAnimatorStateMashine>())
@@ -17,9 +18,17 @@ namespace Enemies.Shapeless
                 statem.currentCallback += callbackOnEnter;
             }
         }
+        public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            if ((int)stateInfo.normalizedTime > repeatTimes)
+            {
+                currentCallback?.Invoke(animator, correspondingStateToMe, ++repeatTimes);
+            }
+        }
         public override void OnStateEnter(Animator animator, AnimatorStateInfo state, int layerIndex)
         {
-            currentCallback?.Invoke(animator, correspondingStateToMe);
+            repeatTimes = 0;
+            currentCallback?.Invoke(animator, correspondingStateToMe, repeatTimes);
         }
     }
 }

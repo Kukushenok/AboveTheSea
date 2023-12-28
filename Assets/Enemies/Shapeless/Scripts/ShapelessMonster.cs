@@ -18,9 +18,9 @@ namespace Enemies.Shapeless
         {
             ShapelessAnimatorStateMashine.SetupCallingFor(mainAnimator, OnStateChanged);
         }
-        private void OnStateChanged(Animator anim, ShapelessState state)
+        private void OnStateChanged(Animator anim, ShapelessState state, int repeatCount)
         {
-            myAudioManager.OnStateStarted(state);
+            myAudioManager.OnStateStarted(state, repeatCount);
         }
     }
 }
