@@ -55,6 +55,24 @@ namespace Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""1507b66e-92c3-40a9-9ac2-5d047ccd92b0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Run"",
+                    ""type"": ""Button"",
+                    ""id"": ""c1cb3548-041f-4188-8ada-108173497f05"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -189,6 +207,28 @@ namespace Input
                     ""action"": ""CameraMovement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7ec7a50b-5c4d-47a6-a9e8-c67ac3e8af53"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6669ea01-e274-4495-84fb-cf9d62f7c4c3"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -217,6 +257,8 @@ namespace Input
             m_PlayerMovement_Interaction = m_PlayerMovement.FindAction("Interaction", throwIfNotFound: true);
             m_PlayerMovement_Movement = m_PlayerMovement.FindAction("Movement", throwIfNotFound: true);
             m_PlayerMovement_CameraMovement = m_PlayerMovement.FindAction("CameraMovement", throwIfNotFound: true);
+            m_PlayerMovement_Jump = m_PlayerMovement.FindAction("Jump", throwIfNotFound: true);
+            m_PlayerMovement_Run = m_PlayerMovement.FindAction("Run", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -281,6 +323,8 @@ namespace Input
         private readonly InputAction m_PlayerMovement_Interaction;
         private readonly InputAction m_PlayerMovement_Movement;
         private readonly InputAction m_PlayerMovement_CameraMovement;
+        private readonly InputAction m_PlayerMovement_Jump;
+        private readonly InputAction m_PlayerMovement_Run;
         public struct PlayerMovementActions
         {
             private @MainInputAsset m_Wrapper;
@@ -288,6 +332,8 @@ namespace Input
             public InputAction @Interaction => m_Wrapper.m_PlayerMovement_Interaction;
             public InputAction @Movement => m_Wrapper.m_PlayerMovement_Movement;
             public InputAction @CameraMovement => m_Wrapper.m_PlayerMovement_CameraMovement;
+            public InputAction @Jump => m_Wrapper.m_PlayerMovement_Jump;
+            public InputAction @Run => m_Wrapper.m_PlayerMovement_Run;
             public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -306,6 +352,12 @@ namespace Input
                 @CameraMovement.started += instance.OnCameraMovement;
                 @CameraMovement.performed += instance.OnCameraMovement;
                 @CameraMovement.canceled += instance.OnCameraMovement;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+                @Run.started += instance.OnRun;
+                @Run.performed += instance.OnRun;
+                @Run.canceled += instance.OnRun;
             }
 
             private void UnregisterCallbacks(IPlayerMovementActions instance)
@@ -319,6 +371,12 @@ namespace Input
                 @CameraMovement.started -= instance.OnCameraMovement;
                 @CameraMovement.performed -= instance.OnCameraMovement;
                 @CameraMovement.canceled -= instance.OnCameraMovement;
+                @Jump.started -= instance.OnJump;
+                @Jump.performed -= instance.OnJump;
+                @Jump.canceled -= instance.OnJump;
+                @Run.started -= instance.OnRun;
+                @Run.performed -= instance.OnRun;
+                @Run.canceled -= instance.OnRun;
             }
 
             public void RemoveCallbacks(IPlayerMovementActions instance)
@@ -350,6 +408,8 @@ namespace Input
             void OnInteraction(InputAction.CallbackContext context);
             void OnMovement(InputAction.CallbackContext context);
             void OnCameraMovement(InputAction.CallbackContext context);
+            void OnJump(InputAction.CallbackContext context);
+            void OnRun(InputAction.CallbackContext context);
         }
     }
 }

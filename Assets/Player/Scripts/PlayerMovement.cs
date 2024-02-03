@@ -2,91 +2,156 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-[RequireComponent(typeof(CharacterController))]
-public class PlayerMovement : MonoBehaviour
+namespace Player
 {
-    [SerializeField]
-    private PlayerMovementAnimator movementAnimator;
-    [SerializeField]
-    private Transform rotationPointTransform, cameraTransform;
-    [SerializeField]
-    private InputActionReference movementReference, rotationReference;
-    [SerializeField]
-    private float speed, backwardsSpeed, cameraSpeed;
-    [SerializeField]
-    private float criticalXDegrees;
-    [SerializeField]
-    [Range(0, 1)] private float rotationDamp = 0.1f;
-    [SerializeField]
-    [Range(0, 1)] private float speedDamp = 0.05f;
-    CharacterController controller;
-    Vector2 currentRotation;
-    float currentBodyXRotation;
-    Vector3 velocity;
-    // Start is called before the first frame update
-    private void Awake()
+    public static class LerpFunctions
     {
-        controller = GetComponent<CharacterController>();
-    }
-    float DampCoeff(float damp)
-    {
-        return 1 - Mathf.Pow(damp, Time.fixedDeltaTime);
-    }
-    void UpdateVelocity()
-    {
-        Vector2 movement = movementReference.action.ReadValue<Vector2>();
-        movement.x *= speed;
-        movement.y *= (movement.y < 0 ? backwardsSpeed : speed);
-        Quaternion rotation = Quaternion.Euler(0, currentRotation.x, 0);
-        Vector3 desiredMoveVector = rotation * new Vector3(movement.x, 0, movement.y);
-        velocity.x = Mathf.Lerp(velocity.x, desiredMoveVector.x, DampCoeff(speedDamp));
-        velocity.z = Mathf.Lerp(velocity.z, desiredMoveVector.z, DampCoeff(speedDamp));
-        if (!controller.isGrounded) velocity += Physics.gravity * Time.fixedDeltaTime;
-        else if (velocity.y < 0) velocity.y = 0;
-        LerpBodyRotation();
-        movementAnimator.SetMovementParams(velocity/speed, currentBodyXRotation);
-    }
-    void LerpBodyRotation()
-    {
-        float dampAmplification = Mathf.Lerp(1, rotationDamp, new Vector2(velocity.x, velocity.z).magnitude / speed);
-        currentBodyXRotation = Mathf.LerpAngle(Mathf.Repeat(currentBodyXRotation, 360), currentRotation.x, DampCoeff(dampAmplification));
-    }
-    void UpdateBodyRotation()
-    {
-        
-        float delta = Mathf.DeltaAngle(currentBodyXRotation, currentRotation.x);
-        if (Mathf.Abs(delta) > criticalXDegrees)
+        public static float LerpForFixedTime(float dampCoeff)
         {
-            delta = delta - Mathf.Sign(delta) * criticalXDegrees;
-            currentBodyXRotation += delta;
-            transform.Rotate(new Vector3(0, delta, 0));
+            return 1 - Mathf.Pow(dampCoeff, Time.fixedDeltaTime);
         }
-        transform.rotation = Quaternion.Euler(new Vector3(0, currentBodyXRotation, 0));
-    }
-    void UpdatePosition()
-    {
-        controller.Move(velocity * Time.fixedDeltaTime);
-    }
-    void UpdateRotation()
-    {
-        Vector2 deltaAngle = rotationReference.action.ReadValue<Vector2>();
-        float scale = 2.0f / (Screen.width + Screen.height);
-        currentRotation += deltaAngle * cameraSpeed * scale;
-        UpdateBodyRotation();
-        currentRotation.y = Mathf.Clamp(currentRotation.y, -100.0f, 90.0f);
-        currentRotation.x = Mathf.Repeat(currentRotation.x, 360.0f);
+        public static void DampByFixedTime(ref float curr, float target, float dampCoeff)
+        {
+            curr = Mathf.Lerp(curr, target, LerpForFixedTime(dampCoeff));
+        }
 
-        Vector3 rotationAngles = new Vector3(-currentRotation.y, currentRotation.x, 0);
-        rotationPointTransform.rotation = Quaternion.Euler(rotationAngles);
+        public static void DampByFixedTime(ref Vector2 vec, Vector2 target, float dampCoeff)
+        {
+            DampByFixedTime(ref vec.x, target.x, dampCoeff);
+            DampByFixedTime(ref vec.y, target.y, dampCoeff);
+        }
     }
-    void FixedUpdate()
+    [RequireComponent(typeof(CharacterController))]
+    public class PlayerMovement : MonoBehaviour
     {
-        UpdateVelocity();
-        UpdatePosition();
-        UpdateRotation();
-    }
-    private void LateUpdate()
-    {
-        cameraTransform.rotation = rotationPointTransform.rotation;
+        [SerializeField]
+        private PlayerMovementAnimator movementAnimator;
+        [SerializeField]
+        private Transform rotationPointTransform, cameraTransform;
+        [Header("Управление")]
+        [SerializeField]
+        private InputActionReference movementReference, rotationReference, jumpReference, runReference;
+        [Header("Параметры передвижения")]
+        [SerializeField]
+        private float speed, backwardsSpeed, runningSpeed, cameraSensivity;
+        [SerializeField, Tooltip("Тело поворачивается вместе с камерой, если между ними угол, больший данного.")]
+        private float criticalBodyRotDegrees;
+        [SerializeField]
+        [Range(0, 1)] private float rotationDamp = 0.1f;
+        [SerializeField]
+        [Range(0, 1)] private float speedDamp = 0.05f;
+        [SerializeField]
+        private float jumpMaxCoyoteTime = 0.4f, jumpVelocity = 4;
+        CharacterController controller;
+        Vector2 currentRotation;
+        float currentBodyXRotation;
+        Vector3 velocity;
+        float currCoyoteTime;
+        // Start is called before the first frame update
+        private void Awake()
+        {
+            controller = GetComponent<CharacterController>();
+            jumpReference.action.performed += OnJumpButtonPressed;
+        }
+        void UpdateVelocity()
+        {
+            Vector2 playerControl = movementReference.action.ReadValue<Vector2>();
+            if (playerControl.sqrMagnitude > 1) playerControl.Normalize();
+            if (runReference.action.IsPressed())
+            {
+                if (playerControl.y < 0)
+                {
+                    playerControl.y *= backwardsSpeed;
+                }
+                else playerControl.y *= runningSpeed;
+                playerControl.x *= runningSpeed;
+            }
+            else
+            {
+                if (playerControl.y < 0)
+                {
+                    playerControl.y *= backwardsSpeed;
+                }
+                else playerControl.y *= speed;
+                playerControl.x *= speed;
+            }
+            Quaternion rotation = Quaternion.Euler(0, currentRotation.x, 0);
+            
+            Vector3 desiredMoveVector = rotation * new Vector3(playerControl.x, 0, playerControl.y);
+            LerpFunctions.DampByFixedTime(ref velocity.x, desiredMoveVector.x, speedDamp);
+            LerpFunctions.DampByFixedTime(ref velocity.z, desiredMoveVector.z, speedDamp);
+            if (controller.isGrounded && velocity.y < 0) velocity.y = 0;
+            velocity += Physics.gravity * Time.fixedDeltaTime; // SCUFFED
+            //if (!controller.isGrounded) velocity += Physics.gravity * Time.fixedDeltaTime;
+            
+            LerpBodyRotation();
+            movementAnimator.SetMovementParams(velocity, currentBodyXRotation);
+        }
+        void LerpBodyRotation()
+        {
+            float dampAmplification = Mathf.Lerp(1, rotationDamp, new Vector2(velocity.x, velocity.z).magnitude / speed);
+            currentBodyXRotation = Mathf.Repeat(currentBodyXRotation, 360);
+            LerpFunctions.DampByFixedTime(ref currentBodyXRotation, currentRotation.x, dampAmplification);
+        }
+        void UpdateBodyRotation()
+        {
+
+            float delta = Mathf.DeltaAngle(currentBodyXRotation, currentRotation.x);
+            if (Mathf.Abs(delta) > criticalBodyRotDegrees)
+            {
+                delta = delta - Mathf.Sign(delta) * criticalBodyRotDegrees;
+                currentBodyXRotation += delta;
+                transform.Rotate(new Vector3(0, delta, 0));
+            }
+            transform.rotation = Quaternion.Euler(new Vector3(0, currentBodyXRotation, 0));
+        }
+        void UpdatePosition()
+        {
+            CollisionFlags flags = controller.Move(velocity * Time.fixedDeltaTime);
+            //velocity = controller.velocity;
+        }
+        void UpdateRotation()
+        {
+            Vector2 deltaAngle = rotationReference.action.ReadValue<Vector2>();
+            float scale = 2.0f / (Screen.width + Screen.height);
+            currentRotation += deltaAngle * cameraSensivity * scale;
+            UpdateBodyRotation();
+            currentRotation.y = Mathf.Clamp(currentRotation.y, -100.0f, 90.0f);
+            currentRotation.x = Mathf.Repeat(currentRotation.x, 360.0f);
+
+            Vector3 rotationAngles = new Vector3(-currentRotation.y, currentRotation.x, 0);
+            rotationPointTransform.rotation = Quaternion.Euler(rotationAngles);
+        }
+
+        void JumpUpdate()
+        {
+            if (!controller.isGrounded && currCoyoteTime > 0)
+            {
+                currCoyoteTime -= Time.fixedDeltaTime;
+            }
+            else if (controller.isGrounded) currCoyoteTime = jumpMaxCoyoteTime;
+            movementAnimator.isGrounded = controller.isGrounded;
+        }
+
+        void OnJumpButtonPressed(InputAction.CallbackContext context)
+        {
+            if (currCoyoteTime > 0)
+            {
+                velocity += Vector3.up * jumpVelocity;
+                currCoyoteTime = 0;
+            }
+        }
+        void FixedUpdate()
+        {
+            JumpUpdate();
+            UpdateVelocity();
+
+            UpdatePosition();
+            UpdateRotation();
+        }
+        private void LateUpdate()
+        {
+            cameraTransform.rotation = rotationPointTransform.rotation;
+        }
     }
 }
