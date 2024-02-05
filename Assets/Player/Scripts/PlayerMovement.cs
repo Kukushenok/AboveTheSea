@@ -2,17 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.GraphicsBuffer;
+
 namespace Player
 {
     public static class LerpFunctions
     {
-        public static float LerpForFixedTime(float dampCoeff)
+        public static float LerpTFixedTime(float dampCoeff)
         {
             return 1 - Mathf.Pow(dampCoeff, Time.fixedDeltaTime);
         }
         public static void DampByFixedTime(ref float curr, float target, float dampCoeff)
         {
-            curr = Mathf.Lerp(curr, target, LerpForFixedTime(dampCoeff));
+            curr = Mathf.Lerp(curr, target, LerpTFixedTime(dampCoeff));
+        }
+        public static void DampAngleByFixedTime(ref float curr, float target, float dampCoeff)
+        {
+            curr = Mathf.LerpAngle(curr, target, LerpTFixedTime(dampCoeff));
         }
 
         public static void DampByFixedTime(ref Vector2 vec, Vector2 target, float dampCoeff)
@@ -91,7 +97,7 @@ namespace Player
         {
             float dampAmplification = Mathf.Lerp(1, rotationDamp, new Vector2(velocity.x, velocity.z).magnitude / speed);
             currentBodyXRotation = Mathf.Repeat(currentBodyXRotation, 360);
-            LerpFunctions.DampByFixedTime(ref currentBodyXRotation, currentRotation.x, dampAmplification);
+            LerpFunctions.DampAngleByFixedTime(ref currentBodyXRotation, currentRotation.x, dampAmplification);
         }
         void UpdateBodyRotation()
         {
@@ -130,7 +136,7 @@ namespace Player
                 currCoyoteTime -= Time.fixedDeltaTime;
             }
             else if (controller.isGrounded) currCoyoteTime = jumpMaxCoyoteTime;
-            movementAnimator.isGrounded = controller.isGrounded;
+            movementAnimator.isGrounded = currCoyoteTime > 0;
         }
 
         void OnJumpButtonPressed(InputAction.CallbackContext context)

@@ -14,23 +14,49 @@ namespace Player
         [SerializeField] private float rayDistance = 0.1f;
         [SerializeField] private float plantedYOffset = 0.1f;
         [SerializeField] private LayerMask mask;
-        [SerializeField, Range(0, 1)] private float footIKDamp;
+        [SerializeField] private float maxAngleDifference;
+        bool TryPlant(Vector3 localOffset)
+        {
+            Vector3 footTargetPos = footTarget.position + footTarget.rotation * localOffset;
+            Vector3 rayPos = Vector3.up * rayYOffset + footTargetPos;
+            if (Physics.Raycast(rayPos, Vector3.down, out RaycastHit hit, rayDistance, mask, QueryTriggerInteraction.Ignore))
+            {
+                Vector3 plantPos = hit.point + hit.normal * plantedYOffset - footTarget.rotation * localOffset;
+                float angleDiff = Vector3.Angle(hit.normal, Vector3.up);
+                Debug.DrawRay(rayPos, Vector3.down * rayDistance, Color.red);
+                if (angleDiff < maxAngleDifference && plantPos.y > footTargetPos.y)
+                {
+                    IKReference.position = plantPos;
+                    IKReference.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal) * footTarget.rotation;
+                    return true;
+                }
+            }
+            return false;
+        }
         void LateUpdate()
         {
             parentConstraint.weight = 1f;
             float targetWeight = 0f;
-            if (Physics.Raycast(footTarget.position + Vector3.up * rayYOffset, Vector3.down, out RaycastHit hit, rayDistance, mask, QueryTriggerInteraction.Ignore))
+            for (int i = 0; i < 3; i++)
             {
-                Vector3 plantPos = hit.point + hit.normal * plantedYOffset;
-                if (plantPos.y > footTarget.position.y)
+                if (TryPlant(Vector3.forward * i / 5.0f))
                 {
-                    IKReference.position = plantPos;// Vector3.Lerp(IKReference.position, plantPos, 1 - Mathf.Pow(footIKDamp, Time.deltaTime)); ;
-                    IKReference.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal) * footTarget.rotation;
-                    targetWeight = 1f;
+                    targetWeight = 1;
+                    return;
                 }
-                Debug.DrawRay(plantPos, Vector3.down * rayDistance, Color.red);
             }
-            twoBoneIKConstraint.weight = targetWeight;//Mathf.Lerp(twoBoneIKConstraint.weight, targetWeight, 1 - Mathf.Pow(footIKDamp, Time.deltaTime));
+            //if (Physics.Raycast(footTarget.position + Vector3.up * rayYOffset, Vector3.down, out RaycastHit hit, rayDistance, mask, QueryTriggerInteraction.Ignore))
+            //{
+            //    Vector3 plantPos = hit.point + hit.normal * plantedYOffset;
+            //    if (dbgInf < maxAngleDifference && plantPos.y > footTarget.position.y)
+            //    {
+            //        IKReference.position = plantPos;
+            //        IKReference.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal) * footTarget.rotation;
+            //        targetWeight = 1f;
+            //    }
+            //    Debug.DrawRay(plantPos, Vector3.down * rayDistance, Color.red);
+            //}
+            twoBoneIKConstraint.weight = targetWeight;
         }
     }
 }
