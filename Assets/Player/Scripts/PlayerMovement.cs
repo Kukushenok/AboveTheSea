@@ -82,7 +82,6 @@ namespace Player
                 playerControl.x *= speed;
             }
             Quaternion rotation = Quaternion.Euler(0, currentRotation.x, 0);
-            
             Vector3 desiredMoveVector = rotation * new Vector3(playerControl.x, 0, playerControl.y);
             LerpFunctions.DampByFixedTime(ref velocity.x, desiredMoveVector.x, speedDamp);
             LerpFunctions.DampByFixedTime(ref velocity.z, desiredMoveVector.z, speedDamp);
