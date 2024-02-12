@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 namespace Player
 {
+    [SaveContainer(SaveManager.GAME_CATEGORY)]
     public class PlayerFootIKPlanter : MonoBehaviour
     {
+        [SavedField(-15)] private static int stepCount;
         public delegate void OnStep(float velocity);
 
         [SerializeField] private MultiParentConstraint parentConstraint;
@@ -60,11 +62,13 @@ namespace Player
             if (isStepping && steppingTime < 0)
             {
                 steppingTime = manager.critAudioTime;
+                stepCount++;
                 OnStepEvent?.Invoke((lastFeetPos.y - footTarget.position.y) / Time.smoothDeltaTime);
             }
             else if (isStepping) steppingTime = manager.critAudioTime;
             else if (!isStepping && steppingTime > 0) steppingTime -= Time.deltaTime;
             lastFeetPos = footTarget.position;
+           
         }
     }
 }
