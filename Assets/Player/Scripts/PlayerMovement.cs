@@ -39,7 +39,9 @@ namespace Player
         private InputActionReference movementReference, rotationReference, jumpReference, runReference;
         [Header("Параметры передвижения")]
         [SerializeField]
-        private float speed, backwardsSpeed, runningSpeed, cameraSensivity;
+        private float speed, backwardsSpeed, runningSpeed;
+        [SerializeField]
+        private float cameraSensivity = 1400f;
         [SerializeField, Tooltip("Тело поворачивается вместе с камерой, если между ними угол, больший данного.")]
         private float criticalBodyRotDegrees;
         [SerializeField]
@@ -58,6 +60,7 @@ namespace Player
         {
             controller = GetComponent<CharacterController>();
             jumpReference.action.performed += OnJumpButtonPressed;
+            
         }
         void UpdateVelocity()
         {
@@ -118,8 +121,9 @@ namespace Player
         void UpdateRotation()
         {
             Vector2 deltaAngle = rotationReference.action.ReadValue<Vector2>();
-            float scale = 2.0f / (Screen.width + Screen.height);
+            float scale = 2.0f / (Screen.width + Screen.height) * 1f;
             currentRotation += deltaAngle * cameraSensivity * scale;
+            Debug.Log(deltaAngle);
             UpdateBodyRotation();
             currentRotation.y = Mathf.Clamp(currentRotation.y, -100.0f, 90.0f);
             currentRotation.x = Mathf.Repeat(currentRotation.x, 360.0f);
@@ -158,5 +162,7 @@ namespace Player
         {
             cameraTransform.rotation = rotationPointTransform.rotation;
         }
+
+        
     }
 }
