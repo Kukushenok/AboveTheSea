@@ -12,13 +12,29 @@ namespace Player
         {
             return 1 - Mathf.Pow(dampCoeff, Time.fixedDeltaTime);
         }
+        public static float LerpTDeltaTime(float dampCoeff)
+        {
+            return 1 - Mathf.Pow(dampCoeff, Time.deltaTime);
+        }
+        public static void DampByLerp(ref float curr, float target, float lerpCoeff)
+        {
+            curr = Mathf.Lerp(curr, target, lerpCoeff);
+        }
         public static void DampByFixedTime(ref float curr, float target, float dampCoeff)
         {
-            curr = Mathf.Lerp(curr, target, LerpTFixedTime(dampCoeff));
+            DampByLerp(ref curr, target, LerpTFixedTime(dampCoeff));
         }
         public static void DampAngleByFixedTime(ref float curr, float target, float dampCoeff)
         {
-            curr = Mathf.LerpAngle(curr, target, LerpTFixedTime(dampCoeff));
+            DampByLerp(ref curr, target, LerpTFixedTime(dampCoeff));
+        }
+        public static void DampByDeltaTime(ref float curr, float target, float dampCoeff)
+        {
+            DampByLerp(ref curr, target, LerpTDeltaTime(dampCoeff));
+        }
+        public static void DampAngleByDeltaTime(ref float curr, float target, float dampCoeff)
+        {
+            DampByLerp(ref curr, target, LerpTDeltaTime(dampCoeff));
         }
 
         public static void DampByFixedTime(ref Vector2 vec, Vector2 target, float dampCoeff)
@@ -49,8 +65,10 @@ namespace Player
         [SerializeField]
         private float jumpMaxCoyoteTime = 0.4f, jumpVelocity = 4;
         CharacterController controller;
-        Vector2 currentRotation;
-        float currentBodyXRotation;
+        public Vector3 CurrentCameraEulerAngles => new Vector3(-_currentRotation.y, _currentRotation.x, 0);
+        public float CurrentBodyXRotation => _currentBodyXRotation;
+        private Vector2 _currentRotation;
+        public float _currentBodyXRotation;
         Vector3 velocity;
         float currCoyoteTime;
         // Start is called before the first frame update
@@ -81,7 +99,7 @@ namespace Player
                 else playerControl.y *= speed;
                 playerControl.x *= speed;
             }
-            Quaternion rotation = Quaternion.Euler(0, currentRotation.x, 0);
+            Quaternion rotation = Quaternion.Euler(0, _currentRotation.x, 0);
             Vector3 desiredMoveVector = rotation * new Vector3(playerControl.x, 0, playerControl.y);
             LerpFunctions.DampByFixedTime(ref velocity.x, desiredMoveVector.x, speedDamp);
             LerpFunctions.DampByFixedTime(ref velocity.z, desiredMoveVector.z, speedDamp);
@@ -90,25 +108,25 @@ namespace Player
             //if (!controller.isGrounded) velocity += Physics.gravity * Time.fixedDeltaTime;
             
             LerpBodyRotation();
-            movementAnimator.SetMovementParams(velocity, currentBodyXRotation);
+            movementAnimator.SetMovementParams(velocity, _currentBodyXRotation);
         }
         void LerpBodyRotation()
         {
             float dampAmplification = Mathf.Lerp(1, rotationDamp, new Vector2(velocity.x, velocity.z).magnitude / speed);
-            currentBodyXRotation = Mathf.Repeat(currentBodyXRotation, 360);
-            LerpFunctions.DampAngleByFixedTime(ref currentBodyXRotation, currentRotation.x, dampAmplification);
+            _currentBodyXRotation = Mathf.Repeat(_currentBodyXRotation, 360);
+            LerpFunctions.DampAngleByFixedTime(ref _currentBodyXRotation, _currentRotation.x, dampAmplification);
         }
         void UpdateBodyRotation()
         {
 
-            float delta = Mathf.DeltaAngle(currentBodyXRotation, currentRotation.x);
+            float delta = Mathf.DeltaAngle(_currentBodyXRotation, _currentRotation.x);
             if (Mathf.Abs(delta) > criticalBodyRotDegrees)
             {
                 delta = delta - Mathf.Sign(delta) * criticalBodyRotDegrees;
-                currentBodyXRotation += delta;
+                _currentBodyXRotation += delta;
                 transform.Rotate(new Vector3(0, delta, 0));
             }
-            transform.rotation = Quaternion.Euler(new Vector3(0, currentBodyXRotation, 0));
+            transform.rotation = Quaternion.Euler(new Vector3(0, _currentBodyXRotation, 0));
         }
         void UpdatePosition()
         {
@@ -119,13 +137,11 @@ namespace Player
         {
             Vector2 deltaAngle = rotationReference.action.ReadValue<Vector2>();
             float scale = 2.0f / (Screen.width + Screen.height);
-            currentRotation += deltaAngle * cameraSensivity * scale;
+            _currentRotation += deltaAngle * cameraSensivity * scale;
             UpdateBodyRotation();
-            currentRotation.y = Mathf.Clamp(currentRotation.y, -100.0f, 90.0f);
-            currentRotation.x = Mathf.Repeat(currentRotation.x, 360.0f);
-
-            Vector3 rotationAngles = new Vector3(-currentRotation.y, currentRotation.x, 0);
-            rotationPointTransform.rotation = Quaternion.Euler(rotationAngles);
+            _currentRotation.y = Mathf.Clamp(_currentRotation.y, -100.0f, 90.0f);
+            _currentRotation.x = Mathf.Repeat(_currentRotation.x, 360.0f);
+            rotationPointTransform.rotation = Quaternion.Euler(CurrentCameraEulerAngles);
         }
 
         void JumpUpdate()
@@ -148,11 +164,10 @@ namespace Player
         }
         void FixedUpdate()
         {
-            JumpUpdate();
             UpdateVelocity();
-
             UpdatePosition();
             UpdateRotation();
+            JumpUpdate();
         }
         private void LateUpdate()
         {
