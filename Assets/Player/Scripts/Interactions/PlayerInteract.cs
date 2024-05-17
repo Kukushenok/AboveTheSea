@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace Player
@@ -10,7 +11,7 @@ namespace Player
         // raycast params
         [SerializeField] float _rayLenght;
         [SerializeField] LayerMask _rayMask;
-
+        [SerializeField] public bool allowInteraction;
         
 
 
@@ -30,7 +31,7 @@ namespace Player
         {
             RaycastHit hit;
 
-            
+            if (!allowInteraction) return;
 
             if (Physics.Raycast(_camera.position, _camera.forward, out hit, _rayLenght, _rayMask)) {
                Debug.Log("I tried");

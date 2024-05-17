@@ -10,6 +10,9 @@ namespace Player
     [RequireComponent(typeof(PlayerMovement))]
     public class PlayerHoldingItemScript : MonoBehaviour
     {
+        public delegate void OnPickedUp();
+
+        public event OnPickedUp OnPickedUpEvent;
         private PlayerMovement playerMovement;
         [Header("Правая рука")]
         [SerializeField] private TwoBoneIKConstraint rightHandConstraint;
@@ -25,6 +28,15 @@ namespace Player
         private PlayerHoldingManager holdingManager;
         [SerializeField] private ItemBehaviour currentHoldingItem;
         [SerializeField] private float holderDampCoeff;
+        public ItemScriptableObject ItemInfo
+        {
+            get
+            {
+                if (currentHoldingItem == null) return null;
+                return currentHoldingItem.bindedScriptableObject;
+            }
+        }
+        private bool allowInteraction;
         private void Awake()
         {
             playerMovement = GetComponent<PlayerMovement>();
@@ -38,22 +50,38 @@ namespace Player
 
         public void Update()
         {
-            if(currentHoldingItem)
+            if (currentHoldingItem)
             {
                 currentHoldingItem.UpdateHoldingPos(holdingManager);
             }
             holdingManager.Update(holderDampCoeff);
-            //Vector3 forward = delta;
-            //Vector3 qrot = playerMovement.CurrentCameraEulerAngles;
-            //qrot.x /= 1.2f;
-            //qrot.y = Mathf.DeltaAngle(playerMovement.CurrentBodyXRotation, qrot.y) / 1.5f + playerMovement.CurrentBodyXRotation;
-            //Quaternion rot = Quaternion.Euler(qrot);
-            //rightHandTip.position = body.position + rot * forward;
-            //rightHandTip.rotation = rot;
-            //float weight = rightHandConstraint.weight;
-            //LerpFunctions.DampByDeltaTime(ref weight, playerMovement.CurrentCameraEulerAngles.x > 80 ? 0 : 1, 0.01f);
-            //rightHandConstraint.weight = weight;
 
+        }
+        public bool PickupItem(ItemBehaviour other)
+        {
+            if (currentHoldingItem != null) return false;
+            OnPickedUpEvent.Invoke();
+            currentHoldingItem = other;
+            StartCoroutine(ItemChange(other.BeginHoldProcess(holdingManager)));
+            return true;
+        }
+
+        public bool PlaceItem(ItemDestinationDescription destination)
+        {
+            if (currentHoldingItem == null) return false;
+            StartCoroutine(ItemDrop(currentHoldingItem.EndHoldingProcess(holdingManager, destination)));
+            return true;
+        }
+        private IEnumerator ItemChange(IEnumerator other)
+        {
+            allowInteraction = false;
+            yield return other;
+            allowInteraction = true;
+        }
+        private IEnumerator ItemDrop(IEnumerator other)
+        {
+            yield return ItemChange(other);
+            currentHoldingItem = null;
         }
         public void LateUpdate()
         {

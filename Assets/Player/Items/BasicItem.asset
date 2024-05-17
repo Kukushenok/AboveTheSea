@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 231dceeb792512b4b98615d427783144, type: 3}
   m_Name: BasicItem
   m_EditorClassIdentifier: 
-  itemPrefab: {fileID: 0}
-  canBeDropped: 0
+  <itemPrefab>k__BackingField: {fileID: 0}
+  <canBeDropped>k__BackingField: 1
+  <pocketFitCategory>k__BackingField: 0

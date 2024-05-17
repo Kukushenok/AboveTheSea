@@ -8,13 +8,13 @@ using UnityEngine;
 
 namespace Item
 {
-    public class SampleItemBehaviour : ItemBehaviour
+    public class SampleItemBehaviour : ItemLinearAnimatedPickups
     {
         [SerializeField] private Vector3 delta;
         [SerializeField] private Vector3 bodyDeltaOnLow;
         public const float STIFFNESS_COEFF = 1.2f;
         private bool wasLow;
-        public override void UpdateHoldingPos(PlayerHoldingData data)
+        protected override void UpdateHoldingPosWhenHolding(PlayerHoldingData data)
         {
             data.leftHand.target.isArmDesired =true;
             Vector3 qrot = data.cameraRotation;
@@ -42,26 +42,28 @@ namespace Item
             }
 
         }
-        public override void AttractItemToHands(PlayerHoldingData data)
+        protected override void AttrackItemWhenHolding(PlayerHoldingData data)
         {
             transform.position = data.leftHand.CurrentHandPos;
             transform.rotation = data.leftHand.CurrentHandRotation;
         }
 
-        protected override IEnumerator OnBeginHold(PlayerHoldingData data)
-        {
-            data.leftHand.target.targetArmPos = transform.position;
-            data.leftHand.target.targetArmRot = transform.rotation;
-            data.leftHand.DrasticalSet(data.leftHand.target);
-            yield return new WaitForSeconds(1);
-        }
+        //protected override IEnumerator OnBeginHold(PlayerHoldingData data)
+        //{
+        //    transform.SetParent(null);
+        //    data.leftHand.target.targetArmPos = transform.position;
+        //    data.leftHand.target.targetArmRot = transform.rotation;
+        //    data.leftHand.DrasticalSet(data.leftHand.target);
+        //    yield return new WaitForSeconds(1);
+        //}
 
-        protected override IEnumerator OnStopHold(PlayerHoldingData data, Vector3 endPos)
-        {
-            data.leftHand.target.targetArmPos = endPos;
-            data.leftHand.target.targetArmRot = transform.rotation;
-            data.leftHand.DrasticalSet(data.leftHand.target);
-            yield return new WaitForSeconds(1);
-        }
+        //protected override IEnumerator OnStopHold(PlayerHoldingData data, ItemDestinationDescription description)
+        //{
+        //    transform.SetParent(description.newParent);
+        //    data.leftHand.target.targetArmPos = endPos;
+        //    data.leftHand.target.targetArmRot = transform.rotation;
+        //    data.leftHand.DrasticalSet(data.leftHand.target);
+        //    yield return new WaitForSeconds(1);
+        //}
     }
 }
