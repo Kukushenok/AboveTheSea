@@ -49,7 +49,7 @@ namespace Input
                 },
                 {
                     ""name"": ""CameraMovement"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""892b97a4-1b1b-44ee-9775-44e75c9a6bc8"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
