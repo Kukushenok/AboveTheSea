@@ -12,6 +12,7 @@ namespace Item
     {
         [SerializeField] private Vector3 delta;
         [SerializeField] private Vector3 bodyDeltaOnLow;
+        public const float STIFFNESS_COEFF = 1.2f;
         private bool wasLow;
         public override void UpdateHoldingPos(PlayerHoldingData data)
         {
@@ -21,14 +22,15 @@ namespace Item
             if (data.cameraRotation.x >= 80)
             {
                 qrot.x = 0;
+                qrot.y = data.bodyXRotation;
                 Quaternion rot = Quaternion.Euler(qrot);
                 data.leftHand.target.targetArmPos = data.bodyPosition + rot * bodyDeltaOnLow;
                 data.leftHand.target.targetArmRot = rot;
             }
             else
             {
-                qrot.x /= 1.2f;
-                qrot.y = Mathf.DeltaAngle(data.bodyXRotation, qrot.y) / 1.5f + data.bodyXRotation;
+                qrot.x /= STIFFNESS_COEFF;
+                qrot.y = Mathf.DeltaAngle(data.bodyXRotation, qrot.y) / STIFFNESS_COEFF + data.bodyXRotation;
                 Quaternion rot = Quaternion.Euler(qrot);
                 data.leftHand.target.targetArmPos = data.bodyPosition + rot * delta;
                 data.leftHand.target.targetArmRot = rot;

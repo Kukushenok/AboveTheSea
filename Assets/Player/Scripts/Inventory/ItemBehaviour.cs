@@ -10,21 +10,6 @@ namespace Item
         public Quaternion targetArmRot;
         public bool isArmDesired;
     }
-    public abstract class ItemHoldProtocol
-    {
-        public void SetupTransformPosByHandPos()
-        {
-
-        }
-        public void SetupHandPosNormal()
-        {
-
-        }
-        public void SetupHandPosLooking()
-        {
-
-        }
-    }
     public abstract class ItemBehaviour : MonoBehaviour
     {
         [SerializeField] private ItemScriptableObject bindedScriptableObject;

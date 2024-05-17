@@ -5733,7 +5733,7 @@ MonoBehaviour:
   <plantedYOffset>k__BackingField: 0.05
   <mask>k__BackingField:
     serializedVersion: 2
-    m_Bits: 118
+    m_Bits: 54
   <maxAngleDifference>k__BackingField: 45
   <forwardOffset>k__BackingField: 0.15
   <forwardOffsetCount>k__BackingField: 4
@@ -5872,6 +5872,7 @@ MonoBehaviour:
   body: {fileID: 1039645178}
   delta: {x: 0.2, y: 0.2, z: 1}
   currentHoldingItem: {fileID: 2079401499}
+  holderDampCoeff: 0.01
 --- !u!1 &1047605042
 GameObject:
   m_ObjectHideFlags: 0
@@ -7066,7 +7067,7 @@ MonoBehaviour:
   bindedScriptableObject: {fileID: 11400000, guid: be74d905a2a817e41ac5f376eecd14ad,
     type: 2}
   delta: {x: 0.2, y: 0.2, z: 1}
-  bodyDeltaOnLow: {x: 0, y: -0.2, z: 1}
+  bodyDeltaOnLow: {x: 0.2, y: -0.3, z: 0.4}
 --- !u!1 &2093045201
 GameObject:
   m_ObjectHideFlags: 0

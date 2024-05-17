@@ -24,6 +24,7 @@ namespace Player
         [SerializeField] private Vector3 delta;
         private PlayerHoldingManager holdingManager;
         [SerializeField] private ItemBehaviour currentHoldingItem;
+        [SerializeField] private float holderDampCoeff;
         private void Awake()
         {
             playerMovement = GetComponent<PlayerMovement>();
@@ -41,7 +42,7 @@ namespace Player
             {
                 currentHoldingItem.UpdateHoldingPos(holdingManager);
             }
-            holdingManager.Update(0.05f);
+            holdingManager.Update(holderDampCoeff);
             //Vector3 forward = delta;
             //Vector3 qrot = playerMovement.CurrentCameraEulerAngles;
             //qrot.x /= 1.2f;

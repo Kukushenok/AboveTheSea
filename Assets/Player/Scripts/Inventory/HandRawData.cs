@@ -31,20 +31,23 @@ namespace Item
     }
     public class HandManager: HandRawData
     {
+        const float VALIDITY = 1e-3f;
         Transform handTargetTransform;
         TwoBoneIKConstraint constraint;
         public void UpdateByLerpCoeff(float lerpCoeff)
         {
             constraint.weight = Mathf.Lerp(constraint.weight, target.isArmDesired ? 1 : 0, lerpCoeff);
-            if (closureCoeff >= 0.95)
+            if (closureCoeff >= 1 - VALIDITY)
             {
                 current = target;
+                closureCoeff = 1;
             }
             else
             {
                 closureCoeff = Mathf.Lerp(closureCoeff, 1, lerpCoeff);
-                current.targetArmRot = Quaternion.Lerp(current.targetArmRot, target.targetArmRot, lerpCoeff);
-                current.targetArmPos = Vector3.Lerp(current.targetArmPos, target.targetArmPos, lerpCoeff);
+                float deqCoeff = Mathf.Pow(closureCoeff, 3);
+                current.targetArmRot = Quaternion.Lerp(current.targetArmRot, target.targetArmRot, deqCoeff);
+                current.targetArmPos = Vector3.Lerp(current.targetArmPos, target.targetArmPos, deqCoeff);
             }
             current.isArmDesired = target.isArmDesired;
             if (current.isArmDesired)
