@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-// Никогда.
-public class Ledder : MonoBehaviour
+public class KeyLockBehaviour : MonoBehaviour, Item
 {
     // Start is called before the first frame update
     void Start()

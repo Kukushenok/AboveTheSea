@@ -1,3 +1,4 @@
+using Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,8 +35,11 @@ namespace Item
             this.newParent = newParent;
         }
     }
-    public abstract class ItemBehaviour : MonoBehaviour
+    public abstract class ItemBehaviour : MonoBehaviour, IItemInteractResponder
     {
+        public delegate void OnPickedUp();
+
+        public event OnPickedUp OnPickedUpEvent;
         [field: SerializeField] public ItemScriptableObject bindedScriptableObject { get; private set; }
         public bool isHolding { get; private set; }
         public abstract void UpdateHoldingPos(PlayerHoldingData data);
@@ -44,6 +48,7 @@ namespace Item
         protected abstract IEnumerator OnStopHold(PlayerHoldingData data, ItemDestinationDescription destination); // Might update later
         public IEnumerator BeginHoldProcess(PlayerHoldingData data)
         {
+            OnPickedUpEvent?.Invoke();
             yield return OnBeginHold(data);
             isHolding = true;
         }
@@ -51,6 +56,11 @@ namespace Item
         {
             isHolding = false;
             yield return OnStopHold(data, destination);
+        }
+
+        public virtual bool OnInteracted(PlayerHoldingItemScript manager)
+        {
+            return manager.PickupItem(this);
         }
     }
 }

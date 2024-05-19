@@ -10,9 +10,6 @@ namespace Player
     [RequireComponent(typeof(PlayerMovement))]
     public class PlayerHoldingItemScript : MonoBehaviour
     {
-        public delegate void OnPickedUp();
-
-        public event OnPickedUp OnPickedUpEvent;
         private PlayerMovement playerMovement;
         [Header("Правая рука")]
         [SerializeField] private TwoBoneIKConstraint rightHandConstraint;
@@ -36,7 +33,8 @@ namespace Player
                 return currentHoldingItem.bindedScriptableObject;
             }
         }
-        private bool allowInteraction;
+        public ItemBehaviour HoldingItem => currentHoldingItem;
+        public bool allowInteraction { get; private set; } = true;
         private void Awake()
         {
             playerMovement = GetComponent<PlayerMovement>();
@@ -60,7 +58,6 @@ namespace Player
         public bool PickupItem(ItemBehaviour other)
         {
             if (currentHoldingItem != null) return false;
-            OnPickedUpEvent.Invoke();
             currentHoldingItem = other;
             StartCoroutine(ItemChange(other.BeginHoldProcess(holdingManager)));
             return true;
@@ -69,8 +66,13 @@ namespace Player
         public bool PlaceItem(ItemDestinationDescription destination)
         {
             if (currentHoldingItem == null) return false;
-            StartCoroutine(ItemDrop(currentHoldingItem.EndHoldingProcess(holdingManager, destination)));
+            StartCoroutine(DisplaceItemCoroutine(destination));
             return true;
+        }
+        public IEnumerator DisplaceItemCoroutine(ItemDestinationDescription destination)
+        {
+            if (currentHoldingItem == null) return null;
+            return ItemDrop(currentHoldingItem.EndHoldingProcess(holdingManager, destination));
         }
         private IEnumerator ItemChange(IEnumerator other)
         {

@@ -4,43 +4,37 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Player
 {
-    [RequireComponent(typeof(ButtonObject))]
-    public class PlayerItemPocket : MonoBehaviour
+    public class PlayerItemPocket : MonoBehaviour, IItemInteractResponder
     {
-        [SerializeField] private PlayerHoldingItemScript manager;
         [SerializeField] private PocketFitCategory pocketFit;
-        private ItemDestinationDescription destination;
-        [SerializeField] private Collider interactionCollider;
-        
+        private ItemBehaviour storedItem;
         public bool holdingItem { get; private set; }
-        private void Awake()
-        {
-            destination = new ItemDestinationDescription(transform.position, transform.forward, transform);
-            GetComponent<ButtonObject>().Interacted += PlayerItemPocket_Interacted;
-        }
-
-        private void PlayerItemPocket_Interacted(Vector3 obj)
-        {
-            OnClick();
-        }
 
         private void Manager_OnPickedUpEvent()
         {
-            interactionCollider.enabled = true;
-            manager.OnPickedUpEvent -= Manager_OnPickedUpEvent;
+            storedItem.OnPickedUpEvent -= Manager_OnPickedUpEvent;
+            storedItem = null;
+            //interactionCollider.enabled = true;
         }
-
-        private void OnClick()
+        public bool OnInteracted(PlayerHoldingItemScript manager)
         {
-            if (manager.ItemInfo != null)
+            if (manager.ItemInfo == null && storedItem)
+            {
+                storedItem.OnInteracted(manager);
+                return true;
+            }
+            if (manager.ItemInfo != null && !storedItem)
             {
                 if (manager.ItemInfo.pocketFitCategory == pocketFit)
                 {
-                    manager.PlaceItem(destination);
-                    interactionCollider.enabled = false;
-                    manager.OnPickedUpEvent += Manager_OnPickedUpEvent;
+                    manager.PlaceItem(new ItemDestinationDescription(transform.position, transform.forward, transform));
+                    //interactionCollider.enabled = false;
+                    storedItem = manager.HoldingItem;
+                    storedItem.OnPickedUpEvent += Manager_OnPickedUpEvent;
                 }
+                return true;
             }
+            return false;
         }
     }
 
