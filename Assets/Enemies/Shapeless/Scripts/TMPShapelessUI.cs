@@ -27,15 +27,15 @@ namespace Enemies.Shapeless
         }
         public void Update()
         {
-            if (Input.GetMouseButton(0))
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit raycastHitInfo))
-                {
-                    trackingTransform.transform.position = raycastHitInfo.point + Vector3.up; 
-                }
-            }
-            trackingTransform.LookAt(shapelessAnimator.transform.position);
+            //if (Input.GetMouseButton(0))
+            //{
+            //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //    if (Physics.Raycast(ray, out RaycastHit raycastHitInfo))
+            //    {
+            //        trackingTransform.transform.position = raycastHitInfo.point + Vector3.up; 
+            //    }
+            //}
+            //trackingTransform.LookAt(shapelessAnimator.transform.position);
         }
     }
 }

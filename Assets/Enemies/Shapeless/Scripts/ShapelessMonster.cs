@@ -14,9 +14,11 @@ namespace Enemies.Shapeless
             get => mainAnimator.GetBool(HKEY_VAR_ANGRY);
             set { mainAnimator.SetBool(HKEY_VAR_ANGRY, value); }
         }
+        public bool initAngry;
         public void Awake()
         {
             ShapelessAnimatorStateMashine.SetupCallingFor(mainAnimator, OnStateChanged);
+            isAngry = initAngry;
         }
         private void OnStateChanged(Animator anim, ShapelessState state, int repeatCount)
         {
