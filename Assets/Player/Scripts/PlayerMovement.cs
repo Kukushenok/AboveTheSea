@@ -135,9 +135,6 @@ namespace Player
         }
         void UpdateRotation()
         {
-            Vector2 deltaAngle = rotationReference.action.ReadValue<Vector2>();
-            float scale = 2.0f / (Screen.width + Screen.height);
-            _currentRotation += deltaAngle * cameraSensivity * scale;
             UpdateBodyRotation();
             _currentRotation.y = Mathf.Clamp(_currentRotation.y, -100.0f, 90.0f);
             _currentRotation.x = Mathf.Repeat(_currentRotation.x, 360.0f);
@@ -168,6 +165,16 @@ namespace Player
             UpdatePosition();
             UpdateRotation();
             JumpUpdate();
+        }
+        void UpdateRotationValue()
+        {
+            Vector2 deltaAngle = rotationReference.action.ReadValue<Vector2>();
+            float scale = 2.0f / (Screen.width + Screen.height);
+            _currentRotation += deltaAngle * cameraSensivity * scale;
+        }
+        public void Update()
+        {
+            UpdateRotationValue();
         }
         private void LateUpdate()
         {
