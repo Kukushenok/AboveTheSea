@@ -37,9 +37,10 @@ namespace Item
     }
     public abstract class ItemBehaviour : MonoBehaviour, IItemInteractResponder
     {
-        public delegate void OnPickedUp();
+        public delegate void OnItemStatusChanged();
 
-        public event OnPickedUp OnPickedUpEvent;
+        public event OnItemStatusChanged OnPickedUpEvent;
+        public event OnItemStatusChanged OnDroppedEvent;
         [field: SerializeField] public ItemScriptableObject bindedScriptableObject { get; private set; }
         public bool isHolding { get; private set; }
         public abstract void UpdateHoldingPos(PlayerHoldingData data);
@@ -54,6 +55,7 @@ namespace Item
         }
         public IEnumerator EndHoldingProcess(PlayerHoldingData data, ItemDestinationDescription destination)
         {
+            OnDroppedEvent?.Invoke();
             isHolding = false;
             yield return OnStopHold(data, destination);
         }
