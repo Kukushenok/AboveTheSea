@@ -17,7 +17,7 @@ namespace DeathScreen
         }
         public void Revive()
         {
-            SceneManager.LoadScene(mainScene);
+            SceneLoadTransitions.LoadScene(SceneLoadTransitions.SCENE_GAMEPLAY);
         }
     }
 }

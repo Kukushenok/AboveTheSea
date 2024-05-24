@@ -10,7 +10,7 @@ namespace Player
         [SerializeField] private int deathSceneID;
         public void KillMe()
         {
-            SceneManager.LoadScene(deathSceneID);
+            SceneLoadTransitions.LoadSceneImmediate(deathSceneID);
         }
     }
 }
