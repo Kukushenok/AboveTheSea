@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BasicItem
   m_EditorClassIdentifier: 
   <itemPrefab>k__BackingField: {fileID: 0}
-  <canBeDropped>k__BackingField: 1
+  <canBeDropped>k__BackingField: 0
   <pocketFitCategory>k__BackingField: 0

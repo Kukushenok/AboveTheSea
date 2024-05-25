@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class ButtonRandomSound : MonoBehaviour
 {
-    [SerializeField] private ButtonObject buttonObject;
+    [SerializeField] private List<ButtonObject> buttonObject;
     [SerializeField] private RandomAudioSource random;
     private void Awake()
     {
-        buttonObject.Interacted += ButtonObject_Interacted;
+        foreach(ButtonObject button in buttonObject)
+        {
+            button.Interacted += ButtonObject_Interacted;
+        }
     }
 
     private void ButtonObject_Interacted(Vector3 obj)
