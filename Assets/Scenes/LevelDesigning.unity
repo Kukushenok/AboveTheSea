@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.46226418, g: 0.46226418, b: 0.46226418, a: 1}
+  m_AmbientSkyColor: {r: 0.084905684, g: 0.054086372, b: 0.030971881, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 0.6
@@ -14578,7 +14578,7 @@ PrefabInstance:
     - target: {fileID: 6454328274260153966, guid: 1e1db0455307a90449abd292b295c776,
         type: 3}
       propertyPath: speed
-      value: 0.8
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 6454328274260153966, guid: 1e1db0455307a90449abd292b295c776,
         type: 3}
@@ -32026,7 +32026,7 @@ PrefabInstance:
     - target: {fileID: 4404500450913544832, guid: 72e109af40fdbe146b09468e711b3504,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.377
+      value: 1.39
       objectReference: {fileID: 0}
     - target: {fileID: 4404500450913544832, guid: 72e109af40fdbe146b09468e711b3504,
         type: 3}
@@ -32036,7 +32036,7 @@ PrefabInstance:
     - target: {fileID: 4404500450913544832, guid: 72e109af40fdbe146b09468e711b3504,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.977
+      value: -0.835
       objectReference: {fileID: 0}
     - target: {fileID: 4404500450913544832, guid: 72e109af40fdbe146b09468e711b3504,
         type: 3}

@@ -13,6 +13,7 @@ namespace Player
         private void Manager_OnPickedUpEvent()
         {
             storedItem.OnPickedUpEvent -= Manager_OnPickedUpEvent;
+            CheckColliders(true);
             storedItem = null;
             //interactionCollider.enabled = true;
         }
@@ -30,11 +31,17 @@ namespace Player
                     manager.PlaceItem(new ItemDestinationDescription(transform.position, transform.forward, transform));
                     //interactionCollider.enabled = false;
                     storedItem = manager.HoldingItem;
+                    CheckColliders(false);
                     storedItem.OnPickedUpEvent += Manager_OnPickedUpEvent;
                 }
                 return true;
             }
             return false;
+        }
+        [System.Obsolete("Это плохое решение. ITEM должен сам следить за своими коллайдерами. Но пофиг.")]
+        public void CheckColliders(bool colToggle)
+        {
+            foreach (Collider col in storedItem.GetComponents<Collider>()) col.enabled = colToggle;
         }
     }
 
