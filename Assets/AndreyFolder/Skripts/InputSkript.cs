@@ -1,47 +1,72 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
+using static UnityEngine.GraphicsBuffer;
 public class InputSkript : MonoBehaviour
 {
     [HideInInspector]
-    public float mouseX, mouseY, horizontal, vertical;
-    [HideInInspector]
-    public bool jump, m1_d,m2_d;
-    void Update()
+    public bool m1_d,m2_d,m1_u,m2,m2_u, doublem, m1,e;
+    bool timegoes = false;
+    double timer;
+    double dtime = 0.2;
+
+    public InputActionReference leftclickref, rightclickref, release, interact;
+    void Start(){
+        leftclickref.action.performed += left;
+        rightclickref.action.performed += right;
+        leftclickref.action.started += left_d;
+        rightclickref.action.started += right_d;
+        leftclickref.action.canceled += left_u;
+        rightclickref.action.canceled += right_u;
+        interact.action.started += e_d;
+        interact.action.canceled += e_u;
+    }
+    void e_d(InputAction.CallbackContext context){
+        e = true;
+    }
+    void e_u(InputAction.CallbackContext context){
+        e = false;
+    }
+    void left_d(InputAction.CallbackContext context){
+        doublem = false;
+        m1_d = true;
+            m1 = true;
+            m1_u = false;
+            if(timegoes){
+                if(Time.time < timer){
+                    doublem = true;
+                }
+                timegoes = false;
+            }
+            if(!timegoes){
+                timegoes = true;
+                timer = Time.time + dtime;
+            }
+    }
+    void left_u(InputAction.CallbackContext context){
+         m1_d = false;
+            m1 = false;
+            m1_u = true;
+    }
+    void right_d(InputAction.CallbackContext context){
+         m2_d = true;
+            m2 = true;
+            m2_u = false;
+    }
+    void right_u(InputAction.CallbackContext context){
+         m2_d = false;
+            m2 = true;
+            m2_u = true;
+    }
+    void left(InputAction.CallbackContext context)
     {
-     //   e_1 = Input.GetButtonDown("E_1");
-     //   true_jump = Input.GetButtonDown("jump_up");
-        mouseX = Input.GetAxis("Mouse X");
-        mouseY = Input.GetAxis("Mouse Y");
-    //    joystickX = Input.GetAxis("Joystick X");
-    //    joystickY = Input.GetAxis("Joystick Y");
-        jump = Input.GetButtonDown("Jump");
-     //   jump_up = Input.GetButtonUp("Jump");
-     //   jump_long = Input.GetButton("Jump");
-        horizontal = Input.GetAxis("Horizontal");
-        vertical = Input.GetAxis("Vertical");
-     //   s2 = Input.GetButton("Fire2");
-        m2_d = Input.GetButtonDown("Fire2");
-       // shift = Input.GetButton("Shift");
-      //  caps = Input.GetButtonDown("caps");
-        m1_d = Input.GetButtonDown("Fire1");
-        //s1_l = Input.GetButton("Fire1");
-        //s1_u = Input.GetButtonUp("Fire1");
-        //knive = Input.GetButtonDown("Knive");
-        //follow = Input.GetButtonDown("Fire3");
-        //float R2 = Input.GetAxis("R2") * (-10);
-        //bool R2_D = false;
-        //if (R2 > 0.8f && !input_r2)
-        //{
-        //    input_r2 = true;
-        //    R2_D = true;
-        //}
-        //if (R2 <= -0.9f && input_r2)
-        //    input_r2 = false;
-        //crossbow_d = (Input.GetButtonDown("Crossbow") || R2_D);
-        //crossbow_u = Input.GetButtonUp("Crossbow");
-        //bomb = Input.GetKey(KeyCode.LeftAlt);
-        //ctrl = (Input.GetButtonDown("Ctrl") || Input.GetKeyDown(KeyCode.LeftControl));
+        m1 = true;
+            m1_u = false;
+    }
+    void right(InputAction.CallbackContext context)
+    {
+            m2 = true;
+            m2_u = false;
     }
 }

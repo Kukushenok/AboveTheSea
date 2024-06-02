@@ -50,13 +50,13 @@ namespace Player
         private PlayerMovementAnimator movementAnimator;
         [SerializeField]
         private Transform rotationPointTransform, cameraTransform;
-        [Header("Управление")]
+        [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
         [SerializeField]
         private InputActionReference movementReference, rotationReference, jumpReference, runReference;
-        [Header("Параметры передвижения")]
+        [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
         [SerializeField]
         private float speed, backwardsSpeed, runningSpeed, cameraSensivity;
-        [SerializeField, Tooltip("Тело поворачивается вместе с камерой, если между ними угол, больший данного.")]
+        [SerializeField, Tooltip("пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.")]
         private float criticalBodyRotDegrees;
         [SerializeField]
         [Range(0, 1)] private float rotationDamp = 0.1f;

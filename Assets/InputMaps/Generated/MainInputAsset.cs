@@ -73,6 +73,24 @@ namespace Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""259b3bd4-aee7-4b31-9078-0c60fcfbd444"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""0e58ce6a-ce3c-4c09-bd01-d76d15d5d863"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -229,6 +247,28 @@ namespace Input
                     ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""17048109-cbf7-46fd-bca9-b2b2ee560ad0"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""743d0012-9a11-4c28-afb8-bf9955c3d489"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -259,6 +299,8 @@ namespace Input
             m_PlayerMovement_CameraMovement = m_PlayerMovement.FindAction("CameraMovement", throwIfNotFound: true);
             m_PlayerMovement_Jump = m_PlayerMovement.FindAction("Jump", throwIfNotFound: true);
             m_PlayerMovement_Run = m_PlayerMovement.FindAction("Run", throwIfNotFound: true);
+            m_PlayerMovement_MouseRight = m_PlayerMovement.FindAction("MouseRight", throwIfNotFound: true);
+            m_PlayerMovement_MouseLeft = m_PlayerMovement.FindAction("MouseLeft", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -325,6 +367,8 @@ namespace Input
         private readonly InputAction m_PlayerMovement_CameraMovement;
         private readonly InputAction m_PlayerMovement_Jump;
         private readonly InputAction m_PlayerMovement_Run;
+        private readonly InputAction m_PlayerMovement_MouseRight;
+        private readonly InputAction m_PlayerMovement_MouseLeft;
         public struct PlayerMovementActions
         {
             private @MainInputAsset m_Wrapper;
@@ -334,6 +378,8 @@ namespace Input
             public InputAction @CameraMovement => m_Wrapper.m_PlayerMovement_CameraMovement;
             public InputAction @Jump => m_Wrapper.m_PlayerMovement_Jump;
             public InputAction @Run => m_Wrapper.m_PlayerMovement_Run;
+            public InputAction @MouseRight => m_Wrapper.m_PlayerMovement_MouseRight;
+            public InputAction @MouseLeft => m_Wrapper.m_PlayerMovement_MouseLeft;
             public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -358,6 +404,12 @@ namespace Input
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
+                @MouseRight.started += instance.OnMouseRight;
+                @MouseRight.performed += instance.OnMouseRight;
+                @MouseRight.canceled += instance.OnMouseRight;
+                @MouseLeft.started += instance.OnMouseLeft;
+                @MouseLeft.performed += instance.OnMouseLeft;
+                @MouseLeft.canceled += instance.OnMouseLeft;
             }
 
             private void UnregisterCallbacks(IPlayerMovementActions instance)
@@ -377,6 +429,12 @@ namespace Input
                 @Run.started -= instance.OnRun;
                 @Run.performed -= instance.OnRun;
                 @Run.canceled -= instance.OnRun;
+                @MouseRight.started -= instance.OnMouseRight;
+                @MouseRight.performed -= instance.OnMouseRight;
+                @MouseRight.canceled -= instance.OnMouseRight;
+                @MouseLeft.started -= instance.OnMouseLeft;
+                @MouseLeft.performed -= instance.OnMouseLeft;
+                @MouseLeft.canceled -= instance.OnMouseLeft;
             }
 
             public void RemoveCallbacks(IPlayerMovementActions instance)
@@ -410,6 +468,8 @@ namespace Input
             void OnCameraMovement(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
             void OnRun(InputAction.CallbackContext context);
+            void OnMouseRight(InputAction.CallbackContext context);
+            void OnMouseLeft(InputAction.CallbackContext context);
         }
     }
 }
