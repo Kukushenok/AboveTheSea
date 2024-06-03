@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Input
   - physobj
+  - Canvas
   layers:
   - Default
   - TransparentFX

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LedSk : MonoBehaviour
 {
@@ -9,9 +10,11 @@ public class LedSk : MonoBehaviour
     Transform player;
     public GameObject obj;
     public bool repare;
+    Canvassc canv;
     void Start(){
+        canv = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvassc>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-         input = GameObject.FindGameObjectWithTag("Input").GetComponent<InputSkript>();
+        input = GameObject.FindGameObjectWithTag("Input").GetComponent<InputSkript>();
     }
     void Update(){
         if(input.e){
@@ -23,7 +26,7 @@ public class LedSk : MonoBehaviour
             }
             }
             else{
-                
+                canv.t1.text = canv.s1 + canv.s3;
             }
         }
         if(Vector3.Distance(transform.position, player.position) <= 3){

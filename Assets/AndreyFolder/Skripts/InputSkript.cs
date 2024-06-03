@@ -6,12 +6,12 @@ using static UnityEngine.GraphicsBuffer;
 public class InputSkript : MonoBehaviour
 {
     [HideInInspector]
-    public bool m1_d,m2_d,m1_u,m2,m2_u, doublem, m1,e;
+    public bool m1_d,m2_d,m1_u,m2,m2_u, doublem, m1,e, j,r;
     bool timegoes = false;
     double timer;
     double dtime = 0.2;
 
-    public InputActionReference leftclickref, rightclickref, release, interact;
+    public InputActionReference leftclickref, rightclickref, interact, tsks, reset;
     void Start(){
         leftclickref.action.performed += left;
         rightclickref.action.performed += right;
@@ -21,6 +21,22 @@ public class InputSkript : MonoBehaviour
         rightclickref.action.canceled += right_u;
         interact.action.started += e_d;
         interact.action.canceled += e_u;
+        tsks.action.started += j_d;
+        tsks.action.canceled += j_u;
+        reset.action.started += r_d;
+        reset.action.canceled += r_u;
+    }
+     void r_d(InputAction.CallbackContext context){
+        r = true;
+    }
+    void r_u(InputAction.CallbackContext context){
+        r = false;
+    }
+    void j_d(InputAction.CallbackContext context){
+        j = true;
+    }
+    void j_u(InputAction.CallbackContext context){
+        j = false;
     }
     void e_d(InputAction.CallbackContext context){
         e = true;

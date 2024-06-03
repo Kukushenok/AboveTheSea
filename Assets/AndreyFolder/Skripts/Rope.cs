@@ -4,6 +4,7 @@ using System;
 
 public class Rope : MonoBehaviour
 {
+    public float force;
     public GameObject hook;
     public GameObject sphere;
     public Transform instpos;
@@ -32,7 +33,7 @@ public class Rope : MonoBehaviour
         if(input.m1_u && attract){
             attract = false;
         }
-        if(attract){
+        if(attract && !input.doublem){
             Vector3 direction;
             if(objlist.Count > 1){
                 direction = objlist[1].transform.position -  objlist[0].transform.position;
@@ -40,10 +41,12 @@ public class Rope : MonoBehaviour
             else{
                 direction = instpos.position - objlist[0].transform.position;
             }
-            attractionobj.GetComponent<Rigidbody>().AddForceAtPosition(direction.normalized * 10, objlist[0].transform.position);
+            if(attractionobj.GetComponent<Rigidbody>() != null){
+                attractionobj.GetComponent<Rigidbody>().AddForceAtPosition(direction.normalized * Time.deltaTime * force * 1000, objlist[0].transform.position);
       //    attractionobj.GetComponent<Rigidbody>().AddForceAtPosition(direction.normalized * 10, attractionobj.transform.position);
             if(objlist.Count == 1 && Vector3.Distance(instpos.position, objlist[0].transform.position) <= 0.1f){
                 attract = false;
+            }
             }
         }
         if(input.doublem && shoot)

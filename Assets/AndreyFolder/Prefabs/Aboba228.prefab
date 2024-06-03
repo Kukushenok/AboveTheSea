@@ -147,9 +147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1470e2eefb37a34c958aae342c70a0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  force: 3
+  force: 0.4
+  maxforce: 6
   sphere: {fileID: 1604542024844689184, guid: 48af83612d0aee749bdaacd9899f27a1, type: 3}
-  distance_to_player: 10
+  distance_to_player: 3
   distance_between_nods: 0.65
   collMask:
     serializedVersion: 2

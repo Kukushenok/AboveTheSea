@@ -5,7 +5,7 @@ using System;
 
 public class Abobask : MonoBehaviour
 {
-    public float force;
+    public float force, maxforce;
     public GameObject sphere;
     public float distance_to_player, distance_between_nods;
     public LayerMask collMask;
@@ -27,8 +27,10 @@ public class Abobask : MonoBehaviour
             dist2 = Vector3.Distance(objlist[objlist.Count - 2].transform.position, objlist[objlist.Count-1].transform.position);
             direction1 = objlist[1].transform.position - objlist[0].transform.position;
             direction2 = objlist[objlist.Count - 2].transform.position - objlist[objlist.Count-1].transform.position;
-            attractionobj1.GetComponent<Rigidbody>().AddForceAtPosition(direction1.normalized * dist1 * force, objlist[0].transform.position);
-            attractionobj2.GetComponent<Rigidbody>().AddForceAtPosition(direction2.normalized * dist2 * force, objlist[objlist.Count-1].transform.position);
+            float currforce1 = Math.Min(dist1 * Time.deltaTime * 1000 * force, maxforce * Time.deltaTime * 1000);
+            float currforce2 = Math.Min(dist2 *Time.deltaTime * 1000 *force,  maxforce * Time.deltaTime * 1000);
+            attractionobj1.GetComponent<Rigidbody>().AddForceAtPosition(direction1.normalized * currforce1, objlist[0].transform.position);
+            attractionobj2.GetComponent<Rigidbody>().AddForceAtPosition(direction2.normalized * currforce2, objlist[objlist.Count-1].transform.position);
       //    attractionobj.GetComponent<Rigidbody>().AddForceAtPosition(direction.normalized * 10, attractionobj.transform.position);
             if(objlist.Count == 2 && Vector3.Distance(objlist[1].transform.position, objlist[0].transform.position) <= distance_between_nods){
                 attract = false;
@@ -37,10 +39,12 @@ public class Abobask : MonoBehaviour
                 Destroy(gameObject);
             }
             if(input.doublem && attract && (Vector3.Distance(player.transform.position, objlist[objlist.Count - 1].transform.position) <= distance_to_player || Vector3.Distance(player.transform.position, objlist[0].transform.position) <= distance_to_player)){
+                input.doublem = false;
                 attract = false;
                 for(int i = 0; i < objlist.Count; ++i)
                     Destroy(objlist[i]);
                 Destroy(gameObject);
+
             }
              
         }
@@ -135,7 +139,12 @@ if(Vector3.Distance(objlist[objlist.Count - 1].transform.position, objlist[objli
             attractionobj1 = objlist[0];
         }
         else{
-             attractionobj1 = objlist[0].transform.parent.gameObject;
+            if(objlist[0].transform.parent.tag == "physobj"){
+                 attractionobj1 = objlist[0].transform.parent.gameObject;
+            }
+            else{
+                attractionobj1 = objlist[0];
+            }
         }
        
         attractionobj2 = null;

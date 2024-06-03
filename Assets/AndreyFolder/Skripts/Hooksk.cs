@@ -13,9 +13,9 @@ public class Hooksk : MonoBehaviour
     public bool second;
     private void OnTriggerEnter(Collider other){
         if(other.tag != "Respawn"){
-            if(other.tag == "physobj"){
+           
             transform.parent = other.transform;
-            
+            if(other.tag == "physobj"){ 
             if(second)
                 ropesk.attractionobj2 = other.gameObject;
         }
