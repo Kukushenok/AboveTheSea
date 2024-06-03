@@ -13,6 +13,12 @@ namespace UI
             Cursor.lockState = CursorLockMode.Locked;
         }
         
+        public void ExitToMainMenu()
+        {
+            if (enabled)
+                SceneLoadTransitions.LoadScene(SceneLoadTransitions.SCENE_MAINMENU);
+            enabled = false;
+        }
 
         //// Update is called once per frame
         //void Update()

@@ -21,6 +21,8 @@ namespace Enemies.Shapeless
         //[SerializeField] private AudioSource[] calmAmbientSources;
         [SerializeField] private AnimationCurve fadeInCurve;
         [SerializeField] private AnimationCurve fadeOutCurve;
+        [SerializeField] private float fadeTargetVolume = 0.5f;
+        [SerializeField] private float fadeDurationTime = 2;
         private AudioSource mainAudioSource;
         private void Awake()
         {
@@ -31,7 +33,7 @@ namespace Enemies.Shapeless
             switch (state)
             {
                 case ShapelessState.SlideNormal:
-                    if (repeatCount == 0) Fade(fadeInCurve, 1, slidingNormalAudioSource);
+                    if (repeatCount == 0) Fade(fadeInCurve, fadeTargetVolume, slidingNormalAudioSource);
                     mainAudioSource.PlayOneShot(slideCalmClip);
                     break;
                 case ShapelessState.CalmingDown:
@@ -44,17 +46,17 @@ namespace Enemies.Shapeless
                     mainAudioSource.PlayOneShot(gettingAngryClip);
                     break;
                 case ShapelessState.SlideAngry:
-                    if (repeatCount == 0) Fade(fadeInCurve, 1, slidingAngryAudioSource);
+                    if (repeatCount == 0) Fade(fadeInCurve, fadeTargetVolume, slidingAngryAudioSource);
                     mainAudioSource.PlayOneShot(slideAngryClip);
                     break;
             }
         }
-        private void ResetAudioSources(params AudioSource[] sources)
+        private void ResetAudioSources()
         {
-            foreach (AudioSource source in sources)
-            {
-                source.Play();
-            }
+            slidingAngryAudioSource.Stop();
+            slidingNormalAudioSource.Stop();
+            ambientAudioSource.Stop();
+            mainAudioSource.Stop();
         }
         private void Fade(AnimationCurve curve, float targetVolume = 0, params AudioSource[] sources) => StartCoroutine(FadeCoroutine(sources, curve, targetVolume));
         private IEnumerator FadeCoroutine(AudioSource[] sources, AnimationCurve curve, float targetVolume = 0)
@@ -67,12 +69,19 @@ namespace Enemies.Shapeless
                 yield return new WaitForEndOfFrame();
                 T += Time.unscaledDeltaTime;
                 value = curve.Evaluate(T);
+                if (T > fadeDurationTime) break;
             }
             foreach (AudioSource source in sources) source.volume = targetVolume;
         }
         public void Update()
         {
             ambientAudioSource.pitch = ambientPitchOffset + featureAnimator.featureFrequency * ambientPitchByFrequency;
+        }
+        public void Death()
+        {
+            Fade(fadeOutCurve, 0, mainAudioSource, slidingNormalAudioSource, slidingNormalAudioSource, ambientAudioSource);
+            enabled = false;
+            Invoke(nameof(ResetAudioSources), fadeDurationTime);
         }
     }
 }

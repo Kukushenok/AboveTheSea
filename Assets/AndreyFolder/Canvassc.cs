@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UI;
 
 public class Canvassc : MonoBehaviour
 {
-    public Scene Startscene;
+    public UIManager manager;
     InputSkript input;
     [HideInInspector]
     public GameObject tsks;
@@ -25,14 +26,24 @@ public class Canvassc : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(input.r){
-            SceneManager.LoadScene("DemoDemo");
+        if (input.r && input.j)
+        {
+            manager.ExitToMainMenu();
+            enabled = false;
         }
-        if(input.j){
+        else if (input.r){
+            if (enabled)
+            {
+                SceneLoadTransitions.LoadScene(SceneLoadTransitions.SCENE_PLAYGROUND);
+            }
+            enabled = false;
+        }
+        else if(input.j){
             tsks.SetActive(true);
         }
         else{
             tsks.SetActive(false);
         }
+
     }
 }

@@ -1,3 +1,4 @@
+using DeathScreen;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace Player
         [SerializeField] private int deathSceneID;
         public void KillMe()
         {
-            SceneLoadTransitions.LoadSceneImmediate(deathSceneID);
+            DeathAnimationBehaviour.ShowImmediateDeathScreen(deathSceneID);
         }
     }
 }

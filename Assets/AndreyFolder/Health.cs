@@ -1,31 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Health : MonoBehaviour
 {
     public float maxhealth;
-    public float damage;
+    public float physicalDamageMulitplier;
+    public UnityEvent OnDeath;
     float health;
-    void Start(){
+    void Awake(){
         health = maxhealth;
     }
-    void Update(){
-        if(health <= 0){
-            deathfunc();
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "physobj" && enabled)
+        {
+            health -= collision.impulse.magnitude * physicalDamageMulitplier;
+            if (health <= 0)
+            {
+                OnDeath?.Invoke();
+                enabled = false;
+                //deathfunc();
+            }
         }
     }
-    private void OnTriggerEnter(Collider other){
-        if(other.tag == "physobj"){
-            health -= damage * other.GetComponent<Rigidbody>().velocity.magnitude;
-        }
-    }
-    void deathfunc(){
-        // Todo
-        // DO NOT DESTROY
-          GetComponent<Enemies.Shapeless.ShapelessMovingScript>().enabled = false;
-    //    GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
-        GetComponent<CharacterController>().enabled = false;
-        gameObject.SetActive(false);
-    }
+    //void deathfunc(){
+    //    // Todo
+    //    // DO NOT DESTROY
+    //      GetComponent<Enemies.Shapeless.ShapelessMovingScript>().enabled = false;
+    ////    GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+    //    GetComponent<CharacterController>().enabled = false;
+    //    gameObject.SetActive(false);
+    //}
 }

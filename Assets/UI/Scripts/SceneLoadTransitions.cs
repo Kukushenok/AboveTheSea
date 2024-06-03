@@ -7,6 +7,7 @@ public static class SceneLoadTransitions
 {
     public const int SCENE_MAINMENU = 0;
     public const int SCENE_GAMEPLAY = 1;
+    public const int SCENE_PLAYGROUND = 3;
     private static int currentSceneLoadIndex = -1;
     public static void LoadScene(int sceneIdx)
     {

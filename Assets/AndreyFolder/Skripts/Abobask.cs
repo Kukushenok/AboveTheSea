@@ -81,8 +81,15 @@ public class Abobask : MonoBehaviour
     private void UpdateRopePositions()
     {
         ropePositions.Clear();
-        for(int i = 0; i < objlist.Count; ++i)
+        for (int i = 0; i < objlist.Count; ++i)
+        {
+            if (objlist[i] == null) continue;
             ropePositions.Add(objlist[i].transform.position);
+        }
+        if (ropePositions.Count < 2)
+        {
+            Destroy(gameObject);
+        }
         rope.positionCount = ropePositions.Count;
         rope.SetPositions(ropePositions.ToArray());
     }

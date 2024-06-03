@@ -34,6 +34,7 @@ namespace Demo
         {
             Time.timeScale = 1;
             mainSnapshot.TransitionTo(1);
+            DemoUIManager.SHOW_PLAYGROUND = true;
             SceneLoadTransitions.LoadScene(SceneLoadTransitions.SCENE_MAINMENU);
         }
         

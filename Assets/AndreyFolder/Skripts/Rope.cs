@@ -19,6 +19,7 @@ public class Rope : MonoBehaviour
     InputSkript input;
     bool attract = false;
     public GameObject attractionobj;
+    public RandomAudioSource audioSource;
      void Start()
     {
         input = GameObject.FindGameObjectWithTag("Input").GetComponent<InputSkript>();
@@ -73,9 +74,10 @@ public class Rope : MonoBehaviour
                  newhook.GetComponent<Hooksk>().ropesk = ropesk;
                   newhook.GetComponent<Hooksk>().func();
                 objlist.Add(newhook);
+                audioSource.PlayRandomSound();
         //        ropePositions.Add(hit.point);
-           //     ropePositions.Add(instpos.position); //Always the last pos must be the instpos
-         //   }
+        //     ropePositions.Add(instpos.position); //Always the last pos must be the instpos
+        //   }
              }
         }
        
@@ -96,7 +98,8 @@ public class Rope : MonoBehaviour
                 objlist.Clear();
                 ropesk.player = gameObject;
                 ropesk.startfunc();
-      //      }
+                audioSource.PlayRandomSound();
+            //      }
         }
         if(shoot){
             UpdateRopePositions();
@@ -171,8 +174,11 @@ public class Rope : MonoBehaviour
     private void UpdateRopePositions()
     {
         ropePositions.Clear();
-        for(int i = 0; i < objlist.Count; ++i)
+        for (int i = 0; i < objlist.Count; ++i)
+        {
+            if (objlist[i] == null) continue;
             ropePositions.Add(objlist[i].transform.position);
+        }
         ropePositions.Add(instpos.position);
         rope.positionCount = ropePositions.Count;
         rope.SetPositions(ropePositions.ToArray());

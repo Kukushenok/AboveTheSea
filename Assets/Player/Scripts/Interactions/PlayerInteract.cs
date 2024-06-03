@@ -49,6 +49,10 @@ namespace Player
             }
 
         }
+        private void OnDestroy()
+        {
+            interactionReference.action.performed -= OnInteraction;
+        }
 
 
     }

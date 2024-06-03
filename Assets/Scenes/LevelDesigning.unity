@@ -4124,7 +4124,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &421298787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4144,11 +4144,16 @@ MonoBehaviour:
   m2_u: 0
   doublem: 0
   m1: 0
+  e: 0
+  j: 0
+  r: 0
   leftclickref: {fileID: 8408485852115126998, guid: 21ece5b85f63bbf45ba7e5764060cbad,
     type: 3}
   rightclickref: {fileID: -6089411690891229195, guid: 21ece5b85f63bbf45ba7e5764060cbad,
     type: 3}
-  release: {fileID: 0}
+  interact: {fileID: 0}
+  tsks: {fileID: 0}
+  reset: {fileID: 0}
 --- !u!4 &421298788
 Transform:
   m_ObjectHideFlags: 0
@@ -28628,7 +28633,7 @@ PrefabInstance:
     - target: {fileID: 2535129650256594084, guid: 1a76cab149423da4781267b81599b9ea,
         type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3398025098847296519, guid: 1a76cab149423da4781267b81599b9ea,
         type: 3}
@@ -29112,7 +29117,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1863720140
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -30907,11 +30912,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2055087446}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01f906d3c7aac2443a34daaef7a16602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  force: 0
   hook: {fileID: 3632873816081195285, guid: 744db2db61fa76c4b8171aa87d2fe124, type: 3}
   sphere: {fileID: 1604542024844689184, guid: 48af83612d0aee749bdaacd9899f27a1, type: 3}
   instpos: {fileID: 1908191047}

@@ -16,6 +16,7 @@ namespace Enemies.Shapeless
         [SerializeField] private ShapelessMonsterFeatureAnimator animator;
         [SerializeField] private Transform targetTransformToLurk;
         private float correctionAngle = 0;
+        private float velocityY = 0;
         private Vector3 targetPosition;
         private NavMeshPath path;
         private NavMeshAgent navAgent;
@@ -41,7 +42,12 @@ namespace Enemies.Shapeless
             Debug.DrawLine(targetPosition, targetPosition + Vector3.up, Color.yellow, 1);
             directionObject.localPosition = rotationCore.localPosition + new Vector3(Mathf.Sin(correctionAngle), 0, Mathf.Cos(correctionAngle)) * 5;
             transform.Rotate(new Vector3(0, correctionAngle * Mathf.Rad2Deg, 0) * degreesPerSecond * animator.speedMultiplier * Time.deltaTime);
-            characterController.Move(transform.forward * speed * animator.speedMultiplier * Time.deltaTime);
+            velocityY += Physics.gravity.y * Time.deltaTime;
+            characterController.Move((transform.forward * speed * animator.speedMultiplier + Vector3.up * velocityY) * Time.deltaTime);
+            if (characterController.isGrounded)
+            {
+                velocityY = 0;
+            }
             navAgent.nextPosition = transform.position;
         }
         private void UpdateCorrectionAngle(Vector3 desiredPos)

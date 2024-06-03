@@ -12,7 +12,7 @@ public class Hooksk : MonoBehaviour
      [HideInInspector]
     public bool second;
     private void OnTriggerEnter(Collider other){
-        if(other.tag != "Respawn"){
+        if(other.tag != "Respawn" && other.tag != "Player"){
            
             transform.parent = other.transform;
             if(other.tag == "physobj"){ 

@@ -12,9 +12,12 @@ EditorBuildSettings:
     path: Assets/Scenes/LevelDesigning.unity
     guid: 07ccb079091d7b94aa42062143797baa
   - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/AndreyFolder/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/DeathScreens/death.unity
     guid: 6f21c12d2c8759a4f93b9bb48a3228b1
+  - enabled: 1
+    path: Assets/AndreyFolder/DemoDemo.unity
+    guid: df5dc60303958644e8f2e89e413e8032
   m_configObjects: {}

@@ -7,6 +7,8 @@ namespace DeathScreen
 {
     public class DeathAnimationBehaviour : MonoBehaviour
     {
+        private static int LastSceneIndex;
+
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private float animTime;
         [SerializeField] private int mainScene;
@@ -17,7 +19,12 @@ namespace DeathScreen
         }
         public void Revive()
         {
-            SceneLoadTransitions.LoadScene(SceneLoadTransitions.SCENE_GAMEPLAY);
+            SceneLoadTransitions.LoadScene(LastSceneIndex);
+        }
+        public static void ShowImmediateDeathScreen(int deathScreenIndex)
+        {
+            LastSceneIndex = SceneManager.GetSceneAt(0).buildIndex;
+            SceneLoadTransitions.LoadSceneImmediate(deathScreenIndex);
         }
     }
 }
