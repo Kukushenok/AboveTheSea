@@ -6,28 +6,28 @@ namespace Player
 {
     public class PlayerFootManager : MonoBehaviour
     {
-        [Header("Параметры аудио шагов")]
+        [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ")]
         [SerializeField] private RandomAudioSource stepSound;
-        [field: SerializeField, Tooltip("Критическое время, за которое состояние на 'забывается'")]
+        [field: SerializeField, Tooltip("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ'")]
         public float critAudioTime { get; private set; } = 0.1f;
         public float velocityMultiplier { get; private set; }
-        [field: Header("Параметры луча")]
-        [field: SerializeField, Tooltip("Смещение по вертикали луча для посадки стопы")]
+        [field: Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ")]
+        [field: SerializeField, Tooltip("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ")]
         public float rayYOffset { get; private set; } = 1;
-        [field: SerializeField, Tooltip("Длина луча для посадки стопы")]
+        [field: SerializeField, Tooltip("пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ")]
         public float rayDistance { get; private set; } = 1.1f;
-        [field: SerializeField, Tooltip("Смещение посадки стопы вверх нормали поверхности")]
+        [field: SerializeField, Tooltip("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
         public float plantedYOffset { get; private set; } = 0.1f;
-        [field: SerializeField, Tooltip("Физический 'слой' объектов для посадки стопы")]
+        [field: SerializeField, Tooltip("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 'пїЅпїЅпїЅпїЅ' пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ")]
         public LayerMask mask { get; private set; }
-        [field: SerializeField, Tooltip("Максимальный угол наклона стопы при посадке")]
+        [field: SerializeField, Tooltip("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
         public float maxAngleDifference { get; private set; }
-        [field: Header("Параметры лучей")]
-        [field: SerializeField, Tooltip("Шаг смещения лучей относительно пятки к носку")]
+        [field: Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ")]
+        [field: SerializeField, Tooltip("пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ")]
         public float forwardOffset { get; private set; } = 0.15f;
-        [field: SerializeField, Tooltip("Кол-во смещений лучей относительно пятки к носку")]
+        [field: SerializeField, Tooltip("пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ")]
         public int forwardOffsetCount { get; private set; } = 4;
-        [Header("Ноги"), SerializeField]
+        [Header("пїЅпїЅпїЅпїЅ"), SerializeField]
         private PlayerFootIKPlanter[] feet;
         
         // Start is called before the first frame update
@@ -48,7 +48,7 @@ namespace Player
         }
         void OnStepOnMaterial(float velocity)
         {
-            Debug.Log(velocity);
+        //    Debug.Log(velocity);
             stepSound.PlayRandomSound();
         }
     }

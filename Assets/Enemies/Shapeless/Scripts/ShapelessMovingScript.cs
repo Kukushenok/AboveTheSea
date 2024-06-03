@@ -7,7 +7,6 @@ namespace Enemies.Shapeless
     [RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(CharacterController))]
     public class ShapelessMovingScript : MonoBehaviour
     {
-        [SerializeField] private Transform target;
         [SerializeField] private Transform directionObject;
         [SerializeField] private Transform rotationCore;
         [SerializeField] private float speed;
@@ -23,6 +22,7 @@ namespace Enemies.Shapeless
         private CharacterController characterController;
         private void Awake()
         {
+            targetTransformToLurk = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
             navAgent = GetComponent<NavMeshAgent>();
             characterController = GetComponent<CharacterController>();
             navAgent.updatePosition = false;
@@ -30,6 +30,7 @@ namespace Enemies.Shapeless
         }
         private void Start()
         {
+            
             correctionAngle = 0;
             InvokeRepeating(nameof(PathUpdate), 1, 1);
         }
