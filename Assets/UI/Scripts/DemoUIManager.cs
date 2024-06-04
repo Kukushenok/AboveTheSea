@@ -1,15 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DemoUIManager : MonoBehaviour
 {
     public static bool SHOW_PLAYGROUND = false;
-    [SerializeField] private GameObject playgroundButton;
+    [SerializeField] private Button playgroundButton;
     public void Awake()
     {
         Cursor.lockState = CursorLockMode.None;
-        playgroundButton.SetActive(SHOW_PLAYGROUND);
+        playgroundButton.interactable = SHOW_PLAYGROUND;
     }
     public void PlayButton()
     {

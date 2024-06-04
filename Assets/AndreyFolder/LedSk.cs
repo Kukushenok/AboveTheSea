@@ -20,9 +20,7 @@ public class LedSk : MonoBehaviour
         if(input.e){
             if(!repare){
                 if(Vector3.Distance(transform.position, player.position) <= 3){
-                player.GetComponent<CharacterController>().enabled = false;
-                player.position = pos.position;
-                player.GetComponent<CharacterController>().enabled = true;
+                    StartCoroutine(ChangePos(player, pos));
             }
             }
             else{
@@ -35,5 +33,13 @@ public class LedSk : MonoBehaviour
         else{
             obj.SetActive(false);
         }
+    }
+    IEnumerator ChangePos(Transform targetObj, Transform posititon)
+    {
+        targetObj.GetComponent<CharacterController>().enabled = false;
+        yield return null;
+        targetObj.transform.position = posititon.position;
+        yield return null;
+        targetObj.GetComponent<CharacterController>().enabled = true;
     }
 }
