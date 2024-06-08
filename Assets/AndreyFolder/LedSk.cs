@@ -7,13 +7,13 @@ public class LedSk : MonoBehaviour
 {
     public Transform pos;
     InputSkript input;
-    Transform player;
+    public Transform player;
     public GameObject obj;
     public bool repare;
     Canvassc canv;
     void Start(){
         canv = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvassc>();
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+   //     player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         input = GameObject.FindGameObjectWithTag("Input").GetComponent<InputSkript>();
     }
     void Update(){
