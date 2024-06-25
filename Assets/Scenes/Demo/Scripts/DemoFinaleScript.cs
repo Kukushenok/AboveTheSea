@@ -1,10 +1,13 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
 namespace Demo
 {
+    /// <summary>
+    /// Класс отвечает за проигрывание анимации окончания
+    /// </summary>
     public class DemoFinaleScript : MonoBehaviour
     {
         [SerializeField] private AudioSource faithJumpSource;

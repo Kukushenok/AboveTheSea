@@ -1,27 +1,21 @@
+using Player;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace Player
 {
-    public class PlayerInteract : MonoBehaviour
+    public class PlayerInteractionManager : MonoBehaviour
     {
+        [SerializeField] private PlayerLookRaycaster raycaster;
         [SerializeField] private InputActionReference interactionReference;
-        [SerializeField] Transform _camera;
-        // raycast params
-        [SerializeField] float _rayLenght;
-        [SerializeField] LayerMask _rayMask;
         [SerializeField] public List<Interactor> interactors;
-        [SerializeField] private PlayerHoldingItemScript _holdingItemScript;
-
-
-        private void Awake()
+        [SerializeField] private PlayerItemManagerScript _holdingItemScript;
+        // Start is called before the first frame update
+        void Awake()
         {
-            
-            if (_camera == null) { Debug.LogError("no camera transform"); }
             interactionReference.action.performed += OnInteraction;
-
             interactors = new List<Interactor>()
             {
                 new HolderGeneralInteractor(_holdingItemScript),
@@ -29,31 +23,26 @@ namespace Player
                 new DropItemInteractor(_holdingItemScript)
             };
         }
-
-        private void Update()
-        {
-            Debug.DrawRay(_camera.position, _camera.forward);
-        }
-
         void OnInteraction(InputAction.CallbackContext context)
         {
-            RaycastHit hit;
-
-            if (Physics.Raycast(_camera.position, _camera.forward, out hit, _rayLenght, _rayMask)) {
+            if (raycaster.GetInteractionHit(out RaycastHit hit))
+            {
                 bool overriden = false;
-                foreach(Interactor it in interactors)
+                foreach (Interactor it in interactors)
                 {
                     it.InteractionHit(hit, ref overriden);
                     if (overriden) break;
                 }
             }
+        }
+        // Update is called once per frame
+        void Update()
+        {
 
         }
         private void OnDestroy()
         {
             interactionReference.action.performed -= OnInteraction;
         }
-
-
     }
 }

@@ -17,7 +17,7 @@ namespace Player
             storedItem = null;
             //interactionCollider.enabled = true;
         }
-        public bool OnInteracted(PlayerHoldingItemScript manager)
+        public bool OnInteracted(PlayerItemManagerScript manager)
         {
             if (manager.ItemInfo == null && storedItem)
             {

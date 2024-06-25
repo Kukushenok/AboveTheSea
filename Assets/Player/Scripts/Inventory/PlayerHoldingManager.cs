@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Item
 {
+    /// <summary>
+    /// Класс представляет данные об игроке
+    /// </summary>
     public class PlayerHoldingData
     {
         public HandRawData leftHand;

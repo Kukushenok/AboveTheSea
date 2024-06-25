@@ -6,75 +6,37 @@ using static UnityEngine.GraphicsBuffer;
 
 namespace Player
 {
-    public static class LerpFunctions
-    {
-        public static float LerpTFixedTime(float dampCoeff)
-        {
-            return 1 - Mathf.Pow(dampCoeff, Time.fixedDeltaTime);
-        }
-        public static float LerpTDeltaTime(float dampCoeff)
-        {
-            return 1 - Mathf.Pow(dampCoeff, Time.deltaTime);
-        }
-        public static void DampByLerp(ref float curr, float target, float lerpCoeff)
-        {
-            curr = Mathf.Lerp(curr, target, lerpCoeff);
-        }
-        public static void DampByFixedTime(ref float curr, float target, float dampCoeff)
-        {
-            DampByLerp(ref curr, target, LerpTFixedTime(dampCoeff));
-        }
-        public static void DampAngleByFixedTime(ref float curr, float target, float dampCoeff)
-        {
-            DampByLerp(ref curr, target, LerpTFixedTime(dampCoeff));
-        }
-        public static void DampByDeltaTime(ref float curr, float target, float dampCoeff)
-        {
-            DampByLerp(ref curr, target, LerpTDeltaTime(dampCoeff));
-        }
-        public static void DampAngleByDeltaTime(ref float curr, float target, float dampCoeff)
-        {
-            DampByLerp(ref curr, target, LerpTDeltaTime(dampCoeff));
-        }
-
-        public static void DampByFixedTime(ref Vector2 vec, Vector2 target, float dampCoeff)
-        {
-            DampByFixedTime(ref vec.x, target.x, dampCoeff);
-            DampByFixedTime(ref vec.y, target.y, dampCoeff);
-        }
-    }
-    [RequireComponent(typeof(CharacterController))]
-    public class PlayerMovement : MonoBehaviour
+    public class PlayerMovement : RigidbodyCharacterController
     {
         [SerializeField]
         private PlayerMovementAnimator movementAnimator;
         [SerializeField]
         private Transform rotationPointTransform, cameraTransform;
-        [Header("����������")]
+        [Header("Управление")]
         [SerializeField]
         private InputActionReference movementReference, rotationReference, jumpReference, runReference;
-        [Header("��������� ������������")]
+        [Header("Параметры передвижения")]
         [SerializeField]
         private float speed, backwardsSpeed, runningSpeed, cameraSensivity;
-        [SerializeField, Tooltip("���� �������������� ������ � �������, ���� ����� ���� ����, ������� �������.")]
+        [SerializeField]
+        private GroundChecker groundChecker;
+        [SerializeField, Tooltip("Тело поворачивается вместе с камерой, если между ними угол, больший данного.")]
         private float criticalBodyRotDegrees;
         [SerializeField]
         [Range(0, 1)] private float rotationDamp = 0.1f;
         [SerializeField]
-        [Range(0, 1)] private float speedDamp = 0.05f;
-        [SerializeField]
         private float jumpMaxCoyoteTime = 0.4f, jumpVelocity = 4;
-        CharacterController controller;
+        //CharacterController controller;
         public Vector3 CurrentCameraEulerAngles => new Vector3(-_currentRotation.y, _currentRotation.x, 0);
         public float CurrentBodyXRotation => _currentBodyXRotation;
         private Vector2 _currentRotation;
-        public float _currentBodyXRotation;
-        Vector3 velocity;
+        private float _currentBodyXRotation;
         float currCoyoteTime;
         // Start is called before the first frame update
-        private void Awake()
+        protected override void Awake()
         {
-            controller = GetComponent<CharacterController>();
+            base.Awake();
+            //controller = GetComponent<CharacterController>();
             jumpReference.action.performed += OnJumpButtonPressed;
         }
         void UpdateVelocity()
@@ -100,11 +62,11 @@ namespace Player
                 playerControl.x *= speed;
             }
             Quaternion rotation = Quaternion.Euler(0, _currentRotation.x, 0);
-            Vector3 desiredMoveVector = rotation * new Vector3(playerControl.x, 0, playerControl.y);
-            LerpFunctions.DampByFixedTime(ref velocity.x, desiredMoveVector.x, speedDamp);
-            LerpFunctions.DampByFixedTime(ref velocity.z, desiredMoveVector.z, speedDamp);
-            if (controller.isGrounded && velocity.y < 0) velocity.y = 0;
-            velocity += Physics.gravity * Time.fixedDeltaTime; // SCUFFED
+            desiredVelocity = rotation * new Vector3(playerControl.x, 0, playerControl.y);
+            //LerpFunctions.DampByFixedTime(ref velocity.x, desiredMoveVector.x, speedDamp);
+            //LerpFunctions.DampByFixedTime(ref velocity.z, desiredMoveVector.z, speedDamp);
+            //if (controller.isGrounded && velocity.y < 0) velocity.y = 0;
+            //desiredVelocity += Physics.gravity * Time.fixedDeltaTime; // SCUFFED
             //if (!controller.isGrounded) velocity += Physics.gravity * Time.fixedDeltaTime;
             
             LerpBodyRotation();
@@ -130,7 +92,8 @@ namespace Player
         }
         void UpdatePosition()
         {
-            CollisionFlags flags = controller.Move(velocity * Time.fixedDeltaTime);
+            UpdateRigidbodyVelocity();
+            //CollisionFlags flags = controller.Move(velocity * Time.fixedDeltaTime);
             //velocity = controller.velocity;
         }
         void UpdateRotation()
@@ -143,11 +106,13 @@ namespace Player
 
         void JumpUpdate()
         {
-            if (!controller.isGrounded && currCoyoteTime > 0)
+            bool isOnGround = groundChecker.IsOnGround();
+            if (isOnGround) rg.AddForce(-Physics.gravity, ForceMode.Acceleration);
+            if (!isOnGround && currCoyoteTime > 0)
             {
                 currCoyoteTime -= Time.fixedDeltaTime;
             }
-            else if (controller.isGrounded) currCoyoteTime = jumpMaxCoyoteTime;
+            else if (isOnGround) currCoyoteTime = jumpMaxCoyoteTime;
             movementAnimator.isGrounded = currCoyoteTime > 0;
         }
 
@@ -155,11 +120,11 @@ namespace Player
         {
             if (currCoyoteTime > 0)
             {
-                velocity += Vector3.up * jumpVelocity;
+                rg.velocity += Vector3.up * jumpVelocity;
                 currCoyoteTime = 0;
             }
         }
-        void FixedUpdate()
+        protected override void FixedUpdate()
         {
             UpdateVelocity();
             UpdatePosition();

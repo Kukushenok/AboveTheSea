@@ -8,14 +8,14 @@ namespace Player
 {
     public class HolderGeneralInteractor : Interactor
     {
-        private PlayerHoldingItemScript playerHolder;
-        public HolderGeneralInteractor(PlayerHoldingItemScript playerHolder)
+        private PlayerItemManagerScript playerHolder;
+        public HolderGeneralInteractor(PlayerItemManagerScript playerHolder)
         {
             this.playerHolder = playerHolder;
         }
         public override void InteractionHit(RaycastHit hit, ref bool overrideOthers)
         {
-            if (!playerHolder.allowInteraction)
+            if (!playerHolder.AllowInteraction)
             {
                 overrideOthers = true;
                 return;

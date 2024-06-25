@@ -6,5 +6,5 @@ using UnityEngine;
 
 public interface IItemInteractResponder
 {
-    bool OnInteracted(PlayerHoldingItemScript manager);
+    bool OnInteracted(PlayerItemManagerScript manager);
 }

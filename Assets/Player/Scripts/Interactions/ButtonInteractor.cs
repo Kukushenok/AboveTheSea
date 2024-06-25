@@ -4,10 +4,6 @@ using UnityEngine;
 
 namespace Player
 {
-    public abstract class Interactor
-    {
-        public abstract void InteractionHit(RaycastHit hit, ref bool overrideOthers);
-    }
     public class ButtonInteractor: Interactor
     {
         private Transform playerTransform;

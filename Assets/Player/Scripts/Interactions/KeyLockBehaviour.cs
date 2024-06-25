@@ -11,7 +11,7 @@ public class KeyLockBehaviour : MonoBehaviour, IItemInteractResponder
     [SerializeField] private Transform picklock;
     [SerializeField] private UnityEvent OnUnlock;
     private KeyItemScript currentKey;
-    public bool OnInteracted(PlayerHoldingItemScript manager)
+    public bool OnInteracted(PlayerItemManagerScript manager)
     {
         if (!enabled) return false;
         if (manager.HoldingItem is KeyItemScript)

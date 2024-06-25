@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DemoUIManager : MonoBehaviour
+namespace Demo
 {
-    public static bool SHOW_PLAYGROUND = false;
-    [SerializeField] private Button playgroundButton;
-    public void Awake()
+    public class DemoUIManager : MonoBehaviour
     {
-        Cursor.lockState = CursorLockMode.None;
-        playgroundButton.interactable = SHOW_PLAYGROUND;
-    }
-    public void PlayButton()
-    {
-        SceneLoadTransitions.LoadScene(SceneLoadTransitions.SCENE_GAMEPLAY);
-    }
-    public void PlayPlaygroundButton()
-    {
-        SceneLoadTransitions.LoadScene(SceneLoadTransitions.SCENE_PLAYGROUND);
+        public static bool SHOW_PLAYGROUND = false;
+        [SerializeField] private Button playgroundButton;
+        public void Awake()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            playgroundButton.interactable = SHOW_PLAYGROUND;
+        }
+        public void PlayButton()
+        {
+            SceneLoadTransitions.LoadScene(SceneLoadTransitions.SCENE_GAMEPLAY);
+        }
+        public void PlayPlaygroundButton()
+        {
+            SceneLoadTransitions.LoadScene(SceneLoadTransitions.SCENE_PLAYGROUND);
+        }
     }
 }

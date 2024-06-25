@@ -6,8 +6,8 @@ namespace Player
 {
     public class DropItemInteractor : Interactor
     {
-        private PlayerHoldingItemScript playerHolder;
-        public DropItemInteractor(PlayerHoldingItemScript playerHolder)
+        private PlayerItemManagerScript playerHolder;
+        public DropItemInteractor(PlayerItemManagerScript playerHolder)
         {
             this.playerHolder = playerHolder;
         }

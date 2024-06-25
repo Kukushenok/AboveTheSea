@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+п»їusing UnityEngine;
 
 namespace Enemies.Shapeless
 {
+    /// <summary>
+    /// РљР»Р°СЃСЃ РѕС‚РІРµС‡Р°РµС‚ Р·Р° РїСЂРѕС†РµРґСѓСЂРЅСѓСЋ Р°РЅРёРјР°С†РёСЋ С‰СѓРїР°Р»СЊС†Р° Р‘РµСЃС„РѕСЂРјРµРЅРЅРѕРіРѕ РњРѕРЅСЃС‚СЂР°
+    /// </summary>
     public class ShapelessTentacleScript : MonoBehaviour
     {
         [System.Serializable]
@@ -42,12 +42,12 @@ namespace Enemies.Shapeless
         private const string HKEY_TENTACLE_SPEED = "speed";
         private const string HKEY_TENTACLE_SHOW_UP = "show_up";
         private const string HKEY_TENTACLE_HIDE = "hide";
-        [Header("Параметры анимации появления/исчезновения тентакли")]
+        [Header("РџР°СЂР°РјРµС‚СЂС‹ Р°РЅРёРјР°С†РёРё РїРѕСЏРІР»РµРЅРёСЏ/РёСЃС‡РµР·РЅРѕРІРµРЅРёСЏ С‚РµРЅС‚Р°РєР»Рё")]
         [SerializeField] private Animator tentacleStatusAnimator;
         [SerializeField] private float timeForInitStatus;
         [SerializeField] private Vector2 timeForInitStatusRandSpeed;
         [SerializeField] private GameObject tentacleMeshObject;
-        [Header("Параметры анимации тентакли")]
+        [Header("РџР°СЂР°РјРµС‚СЂС‹ Р°РЅРёРјР°С†РёРё С‚РµРЅС‚Р°РєР»Рё")]
         [SerializeField] private Transform coreRootBone;
         [SerializeField] private Vector3 angleWiggleMagnitude;
         [SerializeField] private AnimationCurve wiggleMagnitudeWeight;

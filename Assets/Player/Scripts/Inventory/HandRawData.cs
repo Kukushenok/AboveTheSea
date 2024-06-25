@@ -4,6 +4,9 @@ using static UnityEngine.GraphicsBuffer;
 
 namespace Item
 {
+    /// <summary>
+    /// Класс предоставляет интерфейс для изменения положения руки в пространстве.
+    /// </summary>
     public class HandRawData
     {
         public TargetArmState target;
@@ -29,6 +32,9 @@ namespace Item
         }
         protected HandRawData() { }
     }
+    /// <summary>
+    /// Класс предоставляет расширенный интерфейс для изменения положения руки в пространстве.
+    /// </summary>
     public class HandManager: HandRawData
     {
         const float VALIDITY = 1e-3f;

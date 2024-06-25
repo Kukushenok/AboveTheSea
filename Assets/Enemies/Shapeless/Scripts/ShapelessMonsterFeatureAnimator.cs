@@ -1,9 +1,12 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Enemies.Shapeless
 {
+    /// <summary>
+    /// РљР»Р°СЃСЃ РѕС‚РІРµС‡Р°РµС‚ Р·Р° СЂРµРіСѓР»СЏС†РёСЋ Р°РЅРёРјР°С‚РѕСЂР° Сѓ Р‘РµСЃС„РѕСЂРјРµРЅРЅРѕРіРѕ РњРѕРЅСЃС‚СЂР°
+    /// </summary>
     public class ShapelessMonsterFeatureAnimator : MonoBehaviour
     {
         private struct FeatureAnimData
@@ -23,15 +26,15 @@ namespace Enemies.Shapeless
 
         const string HKEY_FEATURE_FREQUENCY = "feature_frequency";
         const string HKEY_FEATURE_MAIN = "feature_main";
-        [Header("Поля, изменяемые аниматором.")]
+        [Header("РџРѕР»СЏ, РёР·РјРµРЅСЏРµРјС‹Рµ Р°РЅРёРјР°С‚РѕСЂРѕРј.")]
         [SerializeField] private float featureFreq;
         [SerializeField] private float movingSpeedMultiplier;
         public float speedMultiplier { get { return movingSpeedMultiplier; } }
         public float featureFrequency { get { return featureFreq; } }
-        [Header("Случайное распределение множителя частоты (min, max)")]
-        // TODO: рандомные числа нужно как то по другому получать
+        [Header("РЎР»СѓС‡Р°Р№РЅРѕРµ СЂР°СЃРїСЂРµРґРµР»РµРЅРёРµ РјРЅРѕР¶РёС‚РµР»СЏ С‡Р°СЃС‚РѕС‚С‹ (min, max)")]
+        // TODO: СЂР°РЅРґРѕРјРЅС‹Рµ С‡РёСЃР»Р° РЅСѓР¶РЅРѕ РєР°Рє С‚Рѕ РїРѕ РґСЂСѓРіРѕРјСѓ РїРѕР»СѓС‡Р°С‚СЊ
         [SerializeField] private Vector2 featureFreqMultiplier;
-        [Header("Аниматоры фичей")]
+        [Header("РђРЅРёРјР°С‚РѕСЂС‹ С„РёС‡РµР№")]
         [SerializeField] private Animator[] featureAnimators;
         private FeatureAnimData[] featureAnimDatas;
         // Start is called before the first frame update
@@ -64,7 +67,6 @@ namespace Enemies.Shapeless
         {
             featureAnimators[index].SetFloat(HKEY_FEATURE_FREQUENCY, featureFreq);
         }
-
 
         // Update is called once per frame
         void Update()

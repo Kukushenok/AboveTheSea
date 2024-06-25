@@ -8,7 +8,7 @@ using UnityEngine.Animations.Rigging;
 namespace Player
 {
     [RequireComponent(typeof(PlayerMovement))]
-    public class PlayerHoldingItemScript : MonoBehaviour
+    public class PlayerItemManagerScript : MonoBehaviour
     {
         private PlayerMovement playerMovement;
         [Header("Правая рука")]
@@ -34,7 +34,25 @@ namespace Player
             }
         }
         public ItemBehaviour HoldingItem => currentHoldingItem;
-        public bool allowInteraction { get; private set; } = true;
+        public bool AllowInteraction { get; private set; } = true;
+        public bool PickupItem(ItemBehaviour other)
+        {
+            if (currentHoldingItem != null) return false;
+            currentHoldingItem = other;
+            StartCoroutine(ItemChange(other.BeginHoldProcess(holdingManager)));
+            return true;
+        }
+        public IEnumerator DisplaceItemCoroutine(ItemDestinationDescription destination)
+        {
+            if (currentHoldingItem == null) return null;
+            return ItemDrop(currentHoldingItem.EndHoldingProcess(holdingManager, destination));
+        }
+        public bool PlaceItem(ItemDestinationDescription destination)
+        {
+            if (currentHoldingItem == null) return false;
+            StartCoroutine(DisplaceItemCoroutine(destination));
+            return true;
+        }
         private void Awake()
         {
             playerMovement = GetComponent<PlayerMovement>();
@@ -46,7 +64,7 @@ namespace Player
                 );
         }
 
-        public void Update()
+        private void Update()
         {
             if (currentHoldingItem)
             {
@@ -55,37 +73,18 @@ namespace Player
             holdingManager.Update(holderDampCoeff);
 
         }
-        public bool PickupItem(ItemBehaviour other)
-        {
-            if (currentHoldingItem != null) return false;
-            currentHoldingItem = other;
-            StartCoroutine(ItemChange(other.BeginHoldProcess(holdingManager)));
-            return true;
-        }
-
-        public bool PlaceItem(ItemDestinationDescription destination)
-        {
-            if (currentHoldingItem == null) return false;
-            StartCoroutine(DisplaceItemCoroutine(destination));
-            return true;
-        }
-        public IEnumerator DisplaceItemCoroutine(ItemDestinationDescription destination)
-        {
-            if (currentHoldingItem == null) return null;
-            return ItemDrop(currentHoldingItem.EndHoldingProcess(holdingManager, destination));
-        }
         private IEnumerator ItemChange(IEnumerator other)
         {
-            allowInteraction = false;
+            AllowInteraction = false;
             yield return other;
-            allowInteraction = true;
+            AllowInteraction = true;
         }
         private IEnumerator ItemDrop(IEnumerator other)
         {
             yield return ItemChange(other);
             currentHoldingItem = null;
         }
-        public void LateUpdate()
+        private void LateUpdate()
         {
             if (currentHoldingItem)
             {
