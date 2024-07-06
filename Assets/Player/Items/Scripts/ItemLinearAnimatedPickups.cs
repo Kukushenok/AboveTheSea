@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Item
 {
-    public abstract class ItemLinearAnimatedPickups : ItemBehaviour
+    public abstract class ItemLinearAnimatedPickups : BaseItemHoldProcessor
     {
         private bool doNotAttract;
         [field: SerializeField, Range(0.1f, 1)] public float animSpeed { get; private set; }
@@ -18,7 +18,7 @@ namespace Item
         }
         protected abstract void AttrackItemWhenHolding(PlayerHoldingData data);
         protected abstract void UpdateHoldingPosWhenHolding(PlayerHoldingData data);
-        protected override IEnumerator OnBeginHold(PlayerHoldingData data)
+        public override IEnumerator OnBeginHold(PlayerHoldingData data)
         {
             transform.SetParent(null);
             doNotAttract = true;
@@ -58,7 +58,7 @@ namespace Item
             transform.rotation = targetRot;
             data.leftHand.target.isArmDesired = false;
         }
-        protected override IEnumerator OnStopHold(PlayerHoldingData data, ItemDestinationDescription destination)
+        public override IEnumerator OnStopHold(PlayerHoldingData data, ItemDestinationDescription destination)
         {
             transform.SetParent(destination.newParent);
             doNotAttract = true;

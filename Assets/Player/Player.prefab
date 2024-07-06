@@ -1573,6 +1573,7 @@ GameObject:
   - component: {fileID: 9033094474954760342}
   - component: {fileID: 4605043314428908020}
   - component: {fileID: 5379020555694050762}
+  - component: {fileID: 4548094233594414976}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -1674,6 +1675,31 @@ MonoBehaviour:
   cameraSensivity: 100
   groundChecker: {fileID: 158749165416074815}
   criticalBodyRotDegrees: 90
+  rotationDampMultiplier:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.9981818
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.0013325
+      value: 0.50502574
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  cameraVerticalMinMax: {x: -100, y: 90}
   rotationDamp: 0.1
   jumpMaxCoyoteTime: 0.2
   jumpVelocity: 7
@@ -1944,8 +1970,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ee15244f7ed44548b376dd6ca5f148b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raycaster: {fileID: 2273021514168736432}
+  playerCore: {fileID: 4548094233594414976}
   interactionReference: {fileID: 1752233156014058936, guid: 21ece5b85f63bbf45ba7e5764060cbad,
+    type: 3}
+  leftButtonReference: {fileID: 8408485852115126998, guid: 21ece5b85f63bbf45ba7e5764060cbad,
+    type: 3}
+  rightButtonReference: {fileID: -6089411690891229195, guid: 21ece5b85f63bbf45ba7e5764060cbad,
     type: 3}
   _holdingItemScript: {fileID: 1583681158188157975}
 --- !u!54 &4605043314428908020
@@ -1998,6 +2028,22 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 1.1, z: 0}
+--- !u!114 &4548094233594414976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2535129650256594084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df80a942c32d5f48b4cced144c7a0f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <PlayerMovement>k__BackingField: {fileID: 3141567801048419339}
+  <InteractionManager>k__BackingField: {fileID: 9033094474954760342}
+  <LookRaycaster>k__BackingField: {fileID: 2273021514168736432}
+  <ItemManager>k__BackingField: {fileID: 1583681158188157975}
 --- !u!1 &2540667362730211861
 GameObject:
   m_ObjectHideFlags: 0

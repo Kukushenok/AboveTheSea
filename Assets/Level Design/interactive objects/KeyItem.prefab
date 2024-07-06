@@ -132,6 +132,9 @@ GameObject:
   - component: {fileID: 2604413637221362351}
   - component: {fileID: 2420083557042375856}
   - component: {fileID: 8842808773681503523}
+  - component: {fileID: 7827194312693109732}
+  - component: {fileID: 6654676229137742299}
+  - component: {fileID: 7668362997668053223}
   m_Layer: 0
   m_Name: KeyItem
   m_TagString: Untagged
@@ -188,12 +191,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8fe9037fe7d4b049a41c5d8c61ad946, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <bindedScriptableObject>k__BackingField: {fileID: 11400000, guid: be74d905a2a817e41ac5f376eecd14ad,
-    type: 2}
-  <animSpeed>k__BackingField: 0.2
-  delta: {x: 0.2, y: 0.2, z: 1}
-  bodyDeltaOnLow: {x: 0.2, y: -0.3, z: 0.4}
-  handDeltaRotation: {x: 0, y: -90, z: -90}
   <Key>k__BackingField: sus
 --- !u!114 &2604413637221362351
 MonoBehaviour:
@@ -320,6 +317,51 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7827194312693109732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4225243687590948104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b4307de775276d4481666f6b85b675d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <bindedScriptableObject>k__BackingField: {fileID: 11400000, guid: be74d905a2a817e41ac5f376eecd14ad,
+    type: 2}
+  holdProcessor: {fileID: 6654676229137742299}
+  itemLogic: {fileID: 7668362997668053223}
+--- !u!114 &6654676229137742299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4225243687590948104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e671ae2f1145544aefbbbb8a466441, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <animSpeed>k__BackingField: 0.2
+  delta: {x: 0.2, y: 0.2, z: 1}
+  bodyDeltaOnLow: {x: 0.2, y: -0.3, z: 0.4}
+  handDeltaRotation: {x: 0, y: -90, z: -90}
+--- !u!114 &7668362997668053223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4225243687590948104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8fe9037fe7d4b049a41c5d8c61ad946, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Key>k__BackingField: sus
 --- !u!1001 &3045558270315232375
 PrefabInstance:
   m_ObjectHideFlags: 0

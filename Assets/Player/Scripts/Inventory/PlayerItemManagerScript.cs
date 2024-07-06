@@ -4,11 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.InputSystem;
 
 namespace Player
 {
     [RequireComponent(typeof(PlayerMovement))]
-    public class PlayerItemManagerScript : MonoBehaviour
+    public class PlayerItemManagerScript : ItemLogicProcessor
     {
         private PlayerMovement playerMovement;
         [Header("Правая рука")]
@@ -90,6 +91,17 @@ namespace Player
             {
                 currentHoldingItem.AttractItemToHands(holdingManager);
             }
+        }
+        public override void OnLeftClick(PlayerCore core, InputAction.CallbackContext context)
+        {
+            if (currentHoldingItem == null) return;
+            currentHoldingItem.OnLeftClickInteraction(core, context);
+        }
+
+        public override void OnRightClick(PlayerCore core, InputAction.CallbackContext context)
+        {
+            if (currentHoldingItem == null) return;
+            currentHoldingItem.OnLeftClickInteraction(core, context);
         }
     }
 }

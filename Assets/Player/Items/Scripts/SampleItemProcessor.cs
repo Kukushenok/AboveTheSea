@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Item
 {
-    public class SampleItemBehaviour : ItemLinearAnimatedPickups
+    public class SampleItemProcessor : ItemLinearAnimatedPickups
     {
         [SerializeField] private Vector3 delta;
         [SerializeField] private Vector3 bodyDeltaOnLow;

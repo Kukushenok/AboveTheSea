@@ -2,6 +2,7 @@ using Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Item
 {
@@ -54,7 +55,7 @@ namespace Item
     /// <summary>
     /// Класс предмета
     /// </summary>
-    public abstract class ItemBehaviour : MonoBehaviour, IItemInteractResponder
+    public class ItemBehaviour : MonoBehaviour, IItemInteractResponder
     {
         public delegate void OnItemStatusChanged();
         /// <summary>
@@ -74,29 +75,20 @@ namespace Item
         /// Держится ли предмет в руке?
         /// </summary>
         public bool isHolding { get; private set; }
+        [SerializeField] private BaseItemHoldProcessor holdProcessor;
+        [SerializeField] private ItemLogicProcessor itemLogic;
+         
+        // Интерфейс предмета. Не расширяйте интерфейс в производных классах!
         /// <summary>
         /// Цикл обновления рук. В нём выставляются позиция рук. Вызывается при Update
         /// </summary>
         /// <param name="data"></param>
-        public abstract void UpdateHoldingPos(PlayerHoldingData data);
+        public void UpdateHoldingPos(PlayerHoldingData data) => holdProcessor.UpdateHoldingPos(data);
         /// <summary>
         /// Цикл обновления положения предмета относительно рук. Вызывается при LateUpdate (после обновления позиции рук)
         /// </summary>
         /// <param name="data"></param>
-        public abstract void AttractItemToHands(PlayerHoldingData data);
-        /// <summary>
-        /// Корутина, отвечающая за процесс подбирания предмета (анимация подбора предмета)
-        /// </summary>
-        /// <param name="data"></param>
-        protected abstract IEnumerator OnBeginHold(PlayerHoldingData data);
-        /// <summary>
-        /// Корутина, отвечающая за процесс сброса предмета. Тут уже указывается, куда предмет выявляется.
-        /// </summary>
-        /// <param name="data"></param>
-        protected abstract IEnumerator OnStopHold(PlayerHoldingData data, ItemDestinationDescription destination);
-        
-        // Интерфейс предмета. Не расширяйте интерфейс в производных классах!
-
+        public void AttractItemToHands(PlayerHoldingData data) => holdProcessor.AttractItemToHands(data);
         /// <summary>
         /// Осуществить процесс подбора предмета.
         /// </summary>
@@ -107,7 +99,7 @@ namespace Item
             if (isHolding) yield break;
 
             OnPickedUpEvent?.Invoke();
-            yield return OnBeginHold(data);
+            yield return holdProcessor.OnBeginHold(data);
             isHolding = true;
         }
         /// <summary>
@@ -122,12 +114,22 @@ namespace Item
 
             OnDroppedEvent?.Invoke();
             isHolding = false;
-            yield return OnStopHold(data, destination);
+            yield return holdProcessor.OnStopHold(data, destination);
         }
 
         public virtual bool OnInteracted(PlayerItemManagerScript manager)
         {
             return manager.PickupItem(this);
+        }
+        public void OnLeftClickInteraction(PlayerCore core, InputAction.CallbackContext context)
+        {
+            if (!isHolding || !itemLogic) return;
+            itemLogic.OnLeftClick(core, context);
+        }
+        public void OnRightClickInteraction(PlayerCore core, InputAction.CallbackContext context)
+        {
+            if (!isHolding || !itemLogic) return;
+            itemLogic.OnRightClick(core, context);
         }
     }
 }

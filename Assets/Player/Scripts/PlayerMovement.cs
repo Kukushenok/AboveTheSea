@@ -22,6 +22,10 @@ namespace Player
         private GroundChecker groundChecker;
         [SerializeField, Tooltip("Тело поворачивается вместе с камерой, если между ними угол, больший данного.")]
         private float criticalBodyRotDegrees;
+        [SerializeField, Tooltip("Зависимость скорости поворота тела от поворота камеры. 0 - минимальный крит. угол, 1 - максимальный.")]
+        private AnimationCurve rotationDampMultiplier;
+        [SerializeField, Tooltip("Критические углы вертикального наклона камеры")]
+        private Vector2 cameraVerticalMinMax = new Vector2(-100, 90);
         [SerializeField]
         [Range(0, 1)] private float rotationDamp = 0.1f;
         [SerializeField]
@@ -74,7 +78,9 @@ namespace Player
         }
         void LerpBodyRotation()
         {
-            float dampAmplification = Mathf.Lerp(1, rotationDamp, new Vector2(velocity.x, velocity.z).magnitude / speed);
+            float angleCor = rotationDampMultiplier.Evaluate((_currentRotation.y - cameraVerticalMinMax.x) / (cameraVerticalMinMax.y - cameraVerticalMinMax.x));
+            Debug.Log(angleCor);
+            float dampAmplification = Mathf.Lerp(1, rotationDamp, new Vector2(velocity.x, velocity.z).magnitude * angleCor / speed);
             _currentBodyXRotation = Mathf.Repeat(_currentBodyXRotation, 360);
             LerpFunctions.DampAngleByFixedTime(ref _currentBodyXRotation, _currentRotation.x, dampAmplification);
         }
@@ -99,7 +105,7 @@ namespace Player
         void UpdateRotation()
         {
             UpdateBodyRotation();
-            _currentRotation.y = Mathf.Clamp(_currentRotation.y, -100.0f, 90.0f);
+            _currentRotation.y = Mathf.Clamp(_currentRotation.y, cameraVerticalMinMax.x, cameraVerticalMinMax.y);
             _currentRotation.x = Mathf.Repeat(_currentRotation.x, 360.0f);
             rotationPointTransform.rotation = Quaternion.Euler(CurrentCameraEulerAngles);
         }
@@ -107,7 +113,7 @@ namespace Player
         void JumpUpdate()
         {
             bool isOnGround = groundChecker.IsOnGround();
-            if (isOnGround) rg.AddForce(-Physics.gravity, ForceMode.Acceleration);
+            //if (isOnGround) rg.AddForce(-Physics.gravity, ForceMode.Acceleration);
             if (!isOnGround && currCoyoteTime > 0)
             {
                 currCoyoteTime -= Time.fixedDeltaTime;
